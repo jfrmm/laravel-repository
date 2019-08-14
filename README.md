@@ -1,7 +1,7 @@
 # ASP Repository
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
-[![Total Downloads](https://img.shields.io/packagist/dt/asp/repository.svg?style=flat-square)](https://packagist.org/packages/a-s-p/.)
+[![Total Downloads](https://img.shields.io/packagist/dt/asp/repository.svg?style=flat-square)](https://packagist.org/packages/asp/repositroy)
 
 ## Install
 `composer require asp/repository`
