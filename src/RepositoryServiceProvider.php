@@ -31,8 +31,7 @@ class RepositoryServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $source = realpath($raw = __DIR__.'/../config/repository.php') ?: $raw;
-        $this->mergeConfigFrom($source, 'repository');
+        $this->mergeConfigFrom(__DIR__.'/../config/repository.php', 'repository');
 
         // Register the service the package provides.
         $this->app->singleton('repository', function ($app) {
@@ -57,10 +56,9 @@ class RepositoryServiceProvider extends ServiceProvider
      */
     protected function bootForConsole()
     {
-        $source = realpath($raw = __DIR__.'/../config/repository.php') ?: $raw;
         // Publishing the configuration file.
         $this->publishes([
-            $source => config_path('repository.php'),
+            __DIR__.'/../config/repository.php' => config_path('repository.php'),
         ], 'repository.config');
 
         // Publishing the views.
