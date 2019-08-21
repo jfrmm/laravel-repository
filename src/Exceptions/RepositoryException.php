@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Repository\Exceptions;
+namespace ASP\Repository\Exceptions;
 
 use ASP\Repository\Traits\MakesResponses;
 use Exception;

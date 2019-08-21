@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Repository;
+namespace ASP\Repository;
 
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;

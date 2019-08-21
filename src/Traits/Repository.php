@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Repository\Traits;
+namespace ASP\Repository\Traits;
 
-use App\Repository\Filter;
+use ASP\Repository\Filter;
 use Exception;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
