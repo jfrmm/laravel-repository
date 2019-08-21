@@ -2,8 +2,9 @@
 
 namespace App\Repository\Traits;
 
-use App\Repository\ModelFilters;
+use App\Repository\Filter;
 use Exception;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
@@ -11,24 +12,63 @@ use Illuminate\Http\Request;
 
 trait Repository
 {
-    use ModelFilter;
+    /**
+     * Filter a result set.
+     *
+     * @param  Builder $query
+     * @param  Filter  $filters
+     *
+     * @return Builder
+     */
+    public function scopeFilter(Builder $query, Filter $filters)
+    {
+        return $filters->apply($query);
+    }
 
     /**
      * Return all the records in the database
      *
-     * @param ModelFilters $filters
+     * @param Filter     $filters
+     * @param array|null $pagination
      *
-     * @return Collection|Model[]
+     * @return Collection|Model[]|LengthAwarePaginator
      * @throws Exception
      */
-    protected static function getAllRecords(ModelFilters $filters = null)
+    protected static function getAllRecords(Filter $filters = null, array $pagination = null)
     {
         try {
+            $builder = self::query();
+
             if (!empty($filters)) {
-                return self::filter($filters)->get();
+                $builder = $builder->filter($filters);
             }
 
-            return self::all();
+            if(!empty($pagination)) {
+                $builder = $builder->paginate(
+                    $pagination['size'],
+                    ['*'],
+                    'page',
+                    $pagination['page']
+                );
+            }
+
+            return $builder;
+        } catch (Exception $e) {
+            throw $e;
+        }
+    }
+
+    /**
+     * Get the specified record from the database
+     *
+     * @param mixed $id
+     *
+     * @return Model|Collection|Builder|Builder[]
+     */
+    protected static function getRecordById($id)
+    {
+        try {
+            return self::findOrFail($id);
         } catch (Exception $e) {
             throw $e;
         }
@@ -81,23 +121,6 @@ trait Repository
             }
 
             return $validation;
-        } catch (Exception $e) {
-            throw $e;
-        }
-    }
-
-    /**
-     * Get the specified record from the database
-     *
-     * @param mixed $id
-     *
-     * @return Model|Collection|Builder|Builder[]
-     * @throws Exception
-     */
-    protected static function getRecordById($id)
-    {
-        try {
-            return self::findOrFail($id);
         } catch (Exception $e) {
             throw $e;
         }
