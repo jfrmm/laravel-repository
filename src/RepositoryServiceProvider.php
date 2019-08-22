@@ -13,15 +13,15 @@ class RepositoryServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        // $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'asp');
-        // $this->loadViewsFrom(__DIR__.'/../resources/views', 'asp');
-        // $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
-        // $this->loadRoutesFrom(__DIR__.'/routes.php');
-
         // Publishing is only necessary when using the CLI.
         if ($this->app->runningInConsole()) {
             $this->bootForConsole();
         }
+
+        // Publish translations for customization
+        $this->publishes([
+            __DIR__.'/resources/lang/' => resource_path('lang/vendor/asp-devteam'),
+        ]);
     }
 
     /**

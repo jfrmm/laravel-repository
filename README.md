@@ -4,7 +4,10 @@
 [![Total Downloads](https://img.shields.io/packagist/dt/asp/repository.svg?style=flat-square)](https://packagist.org/packages/asp/repositroy)
 
 This is a library created to provide an easy way to develop a Model's CRUD in laravel.<br>
-It provides several traits and classes to allow you to create Controllers that handle automaticaly pagination and create JSON responses in a standard format. Also, it provides a set of traits to implement what we call Model driven Repositories, which allows to have your Models act as data Repositories that can handle filtering, pagination, CRUD operations as well as provide an easy way to create your own custom operations and validations.
+It provides several traits and classes to allow you to create Controllers that handle automaticaly pagination and 
+create JSON responses in a standard format. Also, it provides a set of traits to implement what we call Model driven 
+Repositories, which allows to have your Models act as data Repositories that can handle filtering, pagination, CRUD 
+operations as well as provide an easy way to create your own custom operations and validations.
 
 ## Requirements
 This package requires:
@@ -25,7 +28,8 @@ ASP\Repository\RepositoryServiceProvider::class,
 ```
 
 ***
-_The package supports auto-discovery, so if you use Laravel 5.5 or later you may skip registering the service provider and facades as they will be registered automatically._
+_The package supports auto-discovery, so if you use Laravel 5.5 or later you may skip registering the service 
+provider and facades as they will be registered automatically._
 ***
 
 ## Usage
