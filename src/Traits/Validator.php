@@ -3,23 +3,31 @@
 namespace ASP\Repository\Traits;
 
 use Illuminate\Http\Request;
+use ASP\Repository\Exceptions\ValidationException;
 use Illuminate\Support\Facades\Validator as IlluminateValidator;
 
 trait Validator
 {
     /**
-     * The request to be validated
+     * Validate a request against the defined rules
      *
-     * @var Request
+     * @param Request $request
+     * @param array   $rules
+     *
+     * @return bool|array
      */
-    private static $request;
+    private static function validate(Request $request, $rules)
+    {
+        $validator = IlluminateValidator::make($request->all(), $rules);
 
-    /**
-     * The base rules
-     *
-     * @var array
-     */
-    private static $baseRules;
+        if ($validator->fails()) {
+            $errors = $validator->errors()->getMessages();
+
+            return new ValidationException('Validation failed', $errors);
+        }
+
+        return true;
+    }
 
     /**
      * Validate the create action
@@ -30,8 +38,6 @@ trait Validator
      */
     protected static function validateCreate(Request $request)
     {
-        self::setRequest($request);
-
         return self::validate($request, self::getCreateRules());
     }
 
@@ -44,8 +50,6 @@ trait Validator
      */
     protected static function validateUpdate(Request $request)
     {
-        self::setRequest($request);
-
         return self::validate($request, self::getUpdateRules());
     }
 
@@ -58,65 +62,6 @@ trait Validator
      */
     protected static function validateDelete(Request $request)
     {
-        self::setRequest($request);
-
         return self::validate($request, self::getDeleteRules());
-    }
-
-    /**
-     * @param Request $request
-     *
-     * @return void
-     */
-    private static function setRequest(Request $request)
-    {
-        self::$request = $request;
-    }
-
-    /**
-     * @return Request
-     */
-    private static function getRequest()
-    {
-        return self::$request;
-    }
-
-    /**
-     * @return array
-     */
-    private static function getBaseRules()
-    {
-        return self::$baseRules;
-    }
-
-    /**
-     * @param array $rules
-     *
-     * @return void
-     */
-    private static function setBaseRules($rules)
-    {
-        self::$baseRules = $rules;
-    }
-
-    /**
-     * Validate a request against the defined rules
-     *
-     * @param Request $request
-     * @param array $rules
-     *
-     * @return bool|array
-     */
-    private static function validate(Request $request, $rules)
-    {
-        $validator = IlluminateValidator::make($request->all(), $rules);
-
-        if ($validator->fails()) {
-            $errors = $validator->errors()->getMessages();
-
-            return response()->json($errors);
-        }
-
-        return true;
     }
 }

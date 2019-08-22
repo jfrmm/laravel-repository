@@ -3,15 +3,22 @@
 namespace ASP\Repository\Base;
 
 use ASP\Repository\Traits\HasPagination;
+use ASP\Repository\Traits\MakesResponses;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 
 class Controller extends BaseController
 {
-    use HasPagination;
+    use HasPagination, MakesResponses;
 
+    /**
+     * @var Illuminate\Http\Request
+     */
     public $request;
 
+    /**
+     * @return Illuminate\Http\Request|void
+     */
     public function __construct()
     {
         $this->middleware(function (Request $request, $next) {
@@ -20,5 +27,4 @@ class Controller extends BaseController
             return $next($request);
         })->only('index');
     }
-
 }

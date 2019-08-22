@@ -2,10 +2,12 @@
 
 namespace ASP\Repository\Exceptions;
 
-use ASP\Repository\Traits\MakesResponses;
 use Exception;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Database\Eloquent\Model;
+use ASP\Repository\Traits\MakesResponses;
+use Symfony\Component\HttpFoundation\Response as HTTPResponse;
 
 class RepositoryException extends Exception
 {
@@ -17,13 +19,6 @@ class RepositoryException extends Exception
      * @var Model
      */
     protected $model;
-
-    /**
-     * HTTP status code for the exception
-     *
-     * @var int
-     */
-    protected $status;
 
     /**
      * Message for the exception
@@ -66,8 +61,8 @@ class RepositoryException extends Exception
         parent::__construct();
 
         $this->model = $model;
-        $this->status = $status ?? config('api.status.internal_server_error');
-        $this->message = $message ?? __('api.error.internal_server_error');
+        $this->status = $status ?? HTTPResponse::HTTP_INTERNAL_SERVER_ERROR;
+        $this->message = $message ?? HTTPResponse::HTTP_INTERNAL_SERVER_ERROR;
         $this->data = $data;
         $this->dismissible = $dismissible;
 
@@ -75,5 +70,15 @@ class RepositoryException extends Exception
             $entity = __('crud.entities.' . Str::snake(class_basename($this->model)));
             $this->message = $message ?? __($this->crud, ['entity' => $entity]);
         }
+    }
+
+    /**
+     * Report the Exception to the log
+     *
+     * @return void
+     */
+    public function report()
+    {
+        Log::error($this->message);
     }
 }
