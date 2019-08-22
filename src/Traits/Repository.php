@@ -43,7 +43,7 @@ trait Repository
                 $builder = $builder->filter($filters);
             }
 
-            if(!empty($pagination)) {
+            if (!empty($pagination)) {
                 $builder = $builder->paginate(
                     $pagination['size'],
                     ['*'],
