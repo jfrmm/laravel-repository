@@ -5,13 +5,13 @@ namespace ASP\Repository\Traits;
 use ReflectionClass;
 use ASP\Repository\Response;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Builder;
 use Flugg\Responder\Transformers\Transformer;
 use ASP\Repository\Serializers\ErrorSerializer;
+use Illuminate\Pagination\LengthAwarePaginator;
 use ASP\Repository\Exceptions\RepositoryException;
 use Flugg\Responder\Http\Responses\ErrorResponseBuilder;
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Flugg\Responder\Http\Responses\SuccessResponseBuilder;
 use Symfony\Component\HttpFoundation\Response as HTTPResponse;
 
@@ -40,9 +40,9 @@ trait MakesResponses
     /**
      * Generate the response
      *
-     * @param Model|Builder|RepositoryException       $data
-     * @param Transformer                             $transformer
-     * @param string                                  $action
+     * @param Model|Builder|RepositoryException $data
+     * @param Transformer                       $transformer
+     * @param string                            $action
      *
      * @return JsonResponse
      */
@@ -58,9 +58,9 @@ trait MakesResponses
     }
 
     /**
-     * @param Model|Builder|RepositoryException|LengthAwarePaginator $data
-     * @param Transformer                                            $transformer
-     * @param string                                                 $action
+     * @param Model|Collection|RepositoryException|LengthAwarePaginator $data
+     * @param Transformer                                               $transformer
+     * @param string                                                    $action
      *
      * @return void
      */
@@ -92,15 +92,18 @@ trait MakesResponses
                 $message = null;
         }
 
-        if ($data instanceof Model || is_null($data)) {
+        if (
+            $data instanceof Model ||
+            $data instanceof Collection ||
+            is_null($data)
+        ) {
             $this->success($data, $transformer);
+            $this->withMessage($message);
         } elseif ($data instanceof LengthAwarePaginator) {
-            // get paginator
-        } elseif ($data instanceof Builder) {
-            $this->success($data->get(), $transformer);
+            $metadata = $this->getPaginationProperties($data);
+            $this->success($data->items(), $transformer);
+            $this->withPagination($metadata);
         }
-
-        $this->withMessage($message);
     }
 
     /**
@@ -133,9 +136,23 @@ trait MakesResponses
     private function withMessage(string $message = null)
     {
         $this->response = $this->response->meta(['message' => $message]);
+
         return $this;
     }
 
+    /**
+     * Add pagination data
+     *
+     * @param array|null $paginationData
+     *
+     * @return MakesResponses
+     */
+    private function withPagination($paginationData = null)
+    {
+        $this->response = $this->response->meta(['pagination' => $paginationData]);
+
+        return $this;
+    }
 
     /**
      * Override success method from Responder
