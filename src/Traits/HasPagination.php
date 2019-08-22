@@ -2,7 +2,6 @@
 
 namespace ASP\Repository\Traits;
 
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Str;
@@ -23,6 +22,13 @@ trait HasPagination
      */
     protected $paginator = null;
 
+    /**
+     * Set the pagination properties
+     *
+     * @param Request $request
+     *
+     * @return void
+     */
     public function createPagination(Request $request)
     {
         foreach ($request->only(['page', 'size']) as $name => $value) {
@@ -35,6 +41,8 @@ trait HasPagination
     }
 
     /**
+     * Get the pagination metadata
+     *
      * @param LengthAwarePaginator $paginator
      *
      * @return array|null
