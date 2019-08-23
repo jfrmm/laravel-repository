@@ -28,14 +28,9 @@ trait MakesResponses
     private $response;
 
     /**
-     * @var
+     * @var integer
      */
     private $status;
-
-    /**
-     * @var array
-     */
-    private $responses = [];
 
     /**
      * Generate the response
@@ -58,6 +53,8 @@ trait MakesResponses
     }
 
     /**
+     * Prepare a response
+     *
      * @param Model|Collection|RepositoryException|LengthAwarePaginator $data
      * @param Transformer                                               $transformer
      * @param string                                                    $action
@@ -92,11 +89,7 @@ trait MakesResponses
                 $message = null;
         }
 
-        if (
-            $data instanceof Model ||
-            $data instanceof Collection ||
-            is_null($data)
-        ) {
+        if ($data instanceof Model || $data instanceof Collection) {
             $this->success($data, $transformer);
             $this->withMessage($message);
         } elseif ($data instanceof LengthAwarePaginator) {
@@ -107,23 +100,38 @@ trait MakesResponses
     }
 
     /**
+     * Prepare a response with a RepositoryException
+     *
      * @param RepositoryException $exception
      *
      * @return void
      */
-    private function prepareRepositoryExceptionResponse($exception)
+    private function prepareRepositoryExceptionResponse(RepositoryException $exception)
     {
         $reflect = new ReflectionClass($exception);
 
         switch ($reflect->getShortName()) {
             case 'ValidationException':
                 $this->status = HTTPResponse::HTTP_UNPROCESSABLE_ENTITY;
-                $this->error($exception->getMessage(), $exception->getValidationErrors());
+                $message = $exception->getMessage();
+                $data = $exception->getExceptionData();
+                break;
+            case 'IndexException':
+            case 'CreateException':
+            case 'ReadException':
+            case 'UpdateException':
+            case 'DeleteException':
+                $this->status = HTTPResponse::HTTP_INTERNAL_SERVER_ERROR;
+                $message = $exception->getMessage();
+                $data = $exception->getExceptionData();
                 break;
             default:
                 $this->status = HTTPResponse::HTTP_INTERNAL_SERVER_ERROR;
-                $this->error($exception->getMessage(), null);
+                $message = $exception->getMessage();
+                $data = null;
         }
+
+        $this->error($message, $data);
     }
 
     /**
@@ -147,7 +155,7 @@ trait MakesResponses
      *
      * @return MakesResponses
      */
-    private function withPagination($paginationData = null)
+    private function withPagination(array $paginationData = null)
     {
         $this->response = $this->response->meta(['pagination' => $paginationData]);
 
@@ -164,8 +172,8 @@ trait MakesResponses
      */
     private function success($data = null, $transformer = null)
     {
-        $this->response = $this->makesResponsesSuccess($data, $transformer, null);
         $this->status = $this->status ?? HTTPResponse::HTTP_OK;
+        $this->response = $this->makesResponsesSuccess($data, $transformer, null);
 
         return $this;
     }
