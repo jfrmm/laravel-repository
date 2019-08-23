@@ -2,6 +2,8 @@
 
 namespace ASP\Repository\Traits;
 
+use Illuminate\Http\Request;
+
 trait ValidatorRules
 {
     /**
@@ -23,47 +25,57 @@ trait ValidatorRules
     {
         parent::boot();
 
-        self::setBaseRules([]);
+        self::$baseRules = [];
     }
 
     /**
-     * @param array $rules
+     * Model base rules
+     * Override when needed
      *
-     * @return void
-     */
-    protected static function setBaseRules($rules)
-    {
-        self::$baseRules = $rules;
-    }
-
-    /**
+     * @param Request $request
+     *
      * @return array
      */
-    protected static function getBaseRules()
+    protected static function getBaseRules(Request $request)
     {
         return self::$baseRules;
     }
 
     /**
+     * Model create rules
+     * Override when needed
+     *
+     * @param Request $request
+     *
      * @return array
      */
-    protected static function getCreateRules()
+    protected static function getCreateRules(Request $request)
     {
-        return self::getBaseRules();
+        return self::getBaseRules($request);
     }
 
     /**
+     * Model update rules
+     * Override when needed
+     *
+     * @param Request $request
+     *
      * @return array
      */
-    protected static function getUpdateRules()
+    protected static function getUpdateRules(Request $request)
     {
-        return self::getBaseRules();
+        return self::getBaseRules($request);
     }
 
     /**
+     * Model delete rules
+     * Override when needed
+     *
+     * @param Request $request
+     *
      * @return array
      */
-    protected static function getDeleteRules()
+    protected static function getDeleteRules(Request $request)
     {
         return [];
     }

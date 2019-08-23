@@ -13,7 +13,7 @@ abstract class Filter
      *
      * @var Request
      */
-    protected $request;
+    private $request;
 
     /**
      * The builder instance.
