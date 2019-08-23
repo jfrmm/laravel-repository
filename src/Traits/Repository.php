@@ -116,6 +116,11 @@ trait Repository
             if ($validation !== true) {
                 return $validation;
             } else {
+                /**
+                 * Read more about tap()
+                 *
+                 * @link https://medium.com/@taylorotwell/tap-tap-tap-1fc6fc1f93a6
+                 */
                 return tap(
                     self::getRecordById($id),
                     function ($record) use ($request) {
@@ -149,6 +154,11 @@ trait Repository
             if ($validation !== true) {
                 return $validation;
             } else {
+                /**
+                 * Read more about tap()
+                 *
+                 * @link https://medium.com/@taylorotwell/tap-tap-tap-1fc6fc1f93a6
+                 */
                 return tap(
                     self::getRecordById($id),
                     function ($record) {
