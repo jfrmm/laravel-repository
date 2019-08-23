@@ -2,13 +2,18 @@
 
 namespace ASP\Repository\Traits;
 
-use ASP\Repository\Filter;
 use Exception;
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Model;
+use ASP\Repository\Filter;
 use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
+use ASP\Repository\Exceptions\ReadException;
+use Illuminate\Database\Eloquent\Collection;
+use ASP\Repository\Exceptions\IndexException;
+use ASP\Repository\Exceptions\CreateException;
+use ASP\Repository\Exceptions\DeleteException;
+use ASP\Repository\Exceptions\UpdateException;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 trait Repository
 {
@@ -28,13 +33,12 @@ trait Repository
     /**
      * Return all the records in the database
      *
-     * @param Filter     $filters
      * @param array|null $pagination
+     * @param Filter     $filters
      *
-     * @return Collection|Model[]|LengthAwarePaginator
-     * @throws Exception
+     * @return Collection|Model[]|LengthAwarePaginator|IndexException
      */
-    protected static function getAllRecords(Filter $filters = null, array $pagination = null)
+    protected static function getAllRecords(array $pagination = null, Filter $filters = null)
     {
         try {
             $builder = self::query();
@@ -44,7 +48,7 @@ trait Repository
             }
 
             if (!empty($pagination)) {
-                $builder = $builder->paginate(
+                return $builder->paginate(
                     $pagination['size'],
                     ['*'],
                     'page',
@@ -52,9 +56,9 @@ trait Repository
                 );
             }
 
-            return $builder;
+            return $builder->get();
         } catch (Exception $e) {
-            throw $e;
+            return new IndexException(null, null, $e->getMessage());
         }
     }
 
@@ -63,14 +67,14 @@ trait Repository
      *
      * @param mixed $id
      *
-     * @return Model|Collection|Builder|Builder[]
+     * @return Model|Collection|Builder|Builder[]|ReadException
      */
     protected static function getRecordById($id)
     {
         try {
             return self::findOrFail($id);
         } catch (Exception $e) {
-            throw $e;
+            return new ReadException(null, null, $e->getMessage());
         }
     }
 
@@ -79,21 +83,20 @@ trait Repository
      *
      * @param Request $request
      *
-     * @return Model|null
-     * @throws Exception
+     * @return Model|null|CreateException
      */
     protected static function createRecord(Request $request)
     {
         try {
             $validation = self::validateCreate($request);
 
-            if ($validation === true) {
+            if ($validation !== true) {
+                return $validation;
+            } else {
                 return self::create($request->all())->fresh();
             }
-
-            return $validation;
         } catch (Exception $e) {
-            throw $e;
+            return new CreateException(null, null, $e->getMessage());
         }
     }
 
@@ -103,26 +106,30 @@ trait Repository
      * @param mixed   $id
      * @param Request $request
      *
-     * @return Model|null
-     * @throws Exception
+     * @return Model|null|UpdateException
      */
     protected static function updateRecordById($id, Request $request)
     {
         try {
             $validation = self::validateUpdate($request);
 
-            if ($validation === true) {
+            if ($validation !== true) {
+                return $validation;
+            } else {
                 return tap(
                     self::getRecordById($id),
                     function ($record) use ($request) {
-                        return $record->update($request->all());
-                    }
-                )->fresh();
-            }
+                        if ($record instanceof ReadException) {
+                            throw new Exception($record->getMessage());
+                        }
 
-            return $validation;
+                        $record->update($request->all());
+                        $record->fresh();
+                    }
+                );
+            }
         } catch (Exception $e) {
-            throw $e;
+            return new UpdateException(null, null, $e->getMessage());
         }
     }
 
@@ -130,24 +137,31 @@ trait Repository
      * Delete the specified record from the database
      *
      * @param mixed   $id
-     *
      * @param Request $request
      *
-     * @return bool|null
-     * @throws Exception
+     * @return bool|null|DeleteException
      */
     protected static function deleteRecordById($id, Request $request)
     {
         try {
             $validation = self::validateDelete($request);
 
-            if ($validation === true) {
-                return self::getRecordById($id)->delete();
-            }
+            if ($validation !== true) {
+                return $validation;
+            } else {
+                return tap(
+                    self::getRecordById($id),
+                    function ($record) {
+                        if ($record instanceof ReadException) {
+                            throw new Exception($record->getMessage());
+                        }
 
-            return $validation;
+                        $record->delete();
+                    }
+                );
+            }
         } catch (Exception $e) {
-            throw $e;
+            return new DeleteException(null, null, $e->getMessage());
         }
     }
 }
