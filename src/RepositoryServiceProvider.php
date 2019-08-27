@@ -20,7 +20,7 @@ class RepositoryServiceProvider extends ServiceProvider
 
         // Publish translations for customization
         $this->publishes([
-            __DIR__.'/resources/lang/' => resource_path('lang/vendor/asp-devteam'),
+            __DIR__.'/../resources/lang/' => resource_path('lang/vendor/asp-devteam'),
         ]);
     }
 
