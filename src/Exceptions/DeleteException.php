@@ -7,5 +7,5 @@ class DeleteException extends RepositoryException
     /**
      * @var string
      */
-    protected $crud = 'crud.error.delete';
+    protected $crud = 'repository::repository.error.delete';
 }

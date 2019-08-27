@@ -81,23 +81,23 @@ trait MakesResponses
         switch ($action) {
             case 'index':
                 $this->status = HTTPResponse::HTTP_OK;
-                $message = __('repository.success.index');
+                $message = __('repository::repository.success.index');
                 break;
             case 'store':
                 $this->status = HTTPResponse::HTTP_CREATED;
-                $message = __('repository.success.create', ['entity' => $modelName]);
+                $message = __('repository::repository.success.create', ['entity' => $modelName]);
                 break;
             case 'show':
                 $this->status = HTTPResponse::HTTP_OK;
-                $message = __('repository.success.read', ['entity' => $modelName]);
+                $message = __('repository::repository.success.read', ['entity' => $modelName]);
                 break;
             case 'update':
                 $this->status = HTTPResponse::HTTP_OK;
-                $message = __('repository.success.update', ['entity' => $modelName]);
+                $message = __('repository::repository.success.update', ['entity' => $modelName]);
                 break;
             case 'destroy':
                 $this->status = HTTPResponse::HTTP_ACCEPTED;
-                $message = __('repository.success.delete', ['entity' => $modelName]);
+                $message = __('repository::repository.success.delete', ['entity' => $modelName]);
                 break;
             default:
                 $this->status = null;

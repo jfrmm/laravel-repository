@@ -7,5 +7,5 @@ class CreateException extends RepositoryException
     /**
      * @var string
      */
-    protected $crud = 'crud.error.create';
+    protected $crud = 'repository::repository.error.create';
 }
