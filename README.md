@@ -37,7 +37,7 @@ provider and facades as they will be registered automatically._
 To publish the available translations to your application, for customization, just run:
 
 ```shell
-php artisan vendor:publish --provider=ASP\Repository\RepositoryServiceProvider
+php artisan vendor:publish --tag=repository
 ```
 
 ## Usage

@@ -7,5 +7,5 @@ class UpdateException extends RepositoryException
     /**
      * @var string
      */
-    protected $crud = 'crud.error.update';
+    protected $crud = 'repository::repository.error.update';
 }

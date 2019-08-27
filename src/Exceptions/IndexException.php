@@ -7,5 +7,5 @@ class IndexException extends RepositoryException
     /**
      * @var string
      */
-    protected $crud = 'crud.error.index';
+    protected $crud = 'repository::repository.error.index';
 }

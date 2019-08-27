@@ -18,9 +18,12 @@ class RepositoryServiceProvider extends ServiceProvider
             $this->bootForConsole();
         }
 
+        // Load translations
+        $this->loadTranslationsFrom(__DIR__.'/../resources/lang/', 'repository');
+
         // Publish translations for customization
         $this->publishes([
-            __DIR__.'/../resources/lang/' => resource_path('lang/vendor/asp-devteam'),
+            __DIR__.'/../resources/lang/' => resource_path('lang/vendor/repository'),
         ], 'repository');
     }
 
