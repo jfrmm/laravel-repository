@@ -13,7 +13,7 @@ class Model extends \Illuminate\Database\Eloquent\Model
      * @return string
      * @throws ReflectionException
      */
-    public function getModelName()
+    public static function getModelName()
     {
         return (new ReflectionClass(self::class))->getShortName();
     }
