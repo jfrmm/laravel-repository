@@ -13,6 +13,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use ASP\Repository\Exceptions\RepositoryException;
 use Flugg\Responder\Http\Responses\ErrorResponseBuilder;
 use Flugg\Responder\Http\Responses\SuccessResponseBuilder;
+use ReflectionException;
 use Symfony\Component\HttpFoundation\Response as HTTPResponse;
 
 trait MakesResponses
@@ -40,6 +41,7 @@ trait MakesResponses
      * @param string                            $action
      *
      * @return JsonResponse
+     * @throws ReflectionException
      */
     public function respond($data, $transformer, $action)
     {
@@ -105,6 +107,7 @@ trait MakesResponses
      * @param RepositoryException $exception
      *
      * @return void
+     * @throws ReflectionException
      */
     private function prepareRepositoryExceptionResponse(RepositoryException $exception)
     {
@@ -116,9 +119,13 @@ trait MakesResponses
                 $message = $exception->getMessage();
                 $data = $exception->getExceptionData();
                 break;
+            case 'ReadException':
+                $this->status = HTTPResponse::HTTP_NOT_FOUND;
+                $message = $exception->getMessage();
+                $data = $exception->getExceptionData();
+                break;
             case 'IndexException':
             case 'CreateException':
-            case 'ReadException':
             case 'UpdateException':
             case 'DeleteException':
                 $this->status = HTTPResponse::HTTP_INTERNAL_SERVER_ERROR;
@@ -192,10 +199,10 @@ trait MakesResponses
         $this->status = $this->status ?? HTTPResponse::HTTP_INTERNAL_SERVER_ERROR;
 
         if ($dismissible) {
-            if (empty($data)) {
-                $data = [Response::DISMISSIBLE => $dismissible];
+            if (empty($errors)) {
+                $errors = [Response::DISMISSIBLE => $dismissible];
             } else {
-                $data[Response::DISMISSIBLE] = $dismissible;
+                $errors[Response::DISMISSIBLE] = $dismissible;
             }
         }
 

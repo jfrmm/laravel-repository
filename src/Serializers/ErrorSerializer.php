@@ -30,6 +30,7 @@ class ErrorSerializer extends FluggErrorSerializer
         if (!empty($data)) {
             if (isset($data[Response::DISMISSIBLE])) {
                 $response[Response::DISMISSIBLE] = $data[Response::DISMISSIBLE];
+                unset($data[Response::DISMISSIBLE]);
             }
             $response[Response::DATA] = $data;
         }
