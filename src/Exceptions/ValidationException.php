@@ -14,6 +14,9 @@ class ValidationException extends RepositoryException
     {
         $this->message = $message;
 
-        parent::__construct(null, null, $message, $errors);
+        /* Status code set to 422 to mainting consistency with Laravel, see:
+         * https://laravel.com/docs/5.8/validation#quick-ajax-requests-and-validation
+         */
+        parent::__construct(null, UNPROCESSABLE, $message, $errors);
     }
 }

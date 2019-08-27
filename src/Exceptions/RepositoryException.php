@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Database\Eloquent\Model;
 use ASP\Repository\Traits\MakesResponses;
+use ReflectionException;
 use Symfony\Component\HttpFoundation\Response as HTTPResponse;
 
 class RepositoryException extends Exception
@@ -54,10 +55,13 @@ class RepositoryException extends Exception
     /**
      * Constructor.
      *
-     * @param Model   $model
-     * @param integer $status
-     * @param string  $message
-     * @param bool    $dismissible
+     * @param Model      $model
+     * @param integer    $status
+     * @param string     $message
+     * @param array|null $data
+     * @param bool       $dismissible
+     *
+     * @throws ReflectionException
      */
     public function __construct(
         Model $model = null,
