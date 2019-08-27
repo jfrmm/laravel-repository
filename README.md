@@ -32,6 +32,14 @@ _The package supports auto-discovery, so if you use Laravel 5.5 or later you may
 provider and facades as they will be registered automatically._
 ***
 
+#### Publishing resources
+
+To publish the available translations to your application, for customization, just run:
+
+```shell
+php artisan vendor:publish --provider=ASP\Repository\RepositoryServiceProvider
+```
+
 ## Usage
 Write a few lines about the usage of this package.
 

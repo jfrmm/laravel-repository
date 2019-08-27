@@ -2,12 +2,12 @@
 
 namespace ASP\Repository\Exceptions;
 
+use ASP\Repository\Base\Model;
 use Exception;
 use ReflectionClass;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Database\Eloquent\Model;
 use ASP\Repository\Traits\MakesResponses;
 use ReflectionException;
 use Symfony\Component\HttpFoundation\Response as HTTPResponse;
@@ -82,8 +82,8 @@ class RepositoryException extends Exception
         $this->dismissible = $dismissible;
 
         if (!empty($this->model)) {
-            $entity = __('crud.entities.' . Str::snake(class_basename($this->model)));
-            $this->message = $message ?? __($this->crud, ['entity' => $entity]);
+            $modelName = $model instanceof Model ? $model->getModelName() : 'Model';
+            $this->message = $message ?? __($this->crud, ['entity' => $modelName]);
         }
 
         $this->report();

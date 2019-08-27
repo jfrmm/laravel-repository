@@ -2,6 +2,8 @@
 
 namespace ASP\Repository\Traits;
 
+use ASP\Repository\Base\Model as BaseModel;
+use Illuminate\Database\Eloquent\Builder;
 use ReflectionClass;
 use ASP\Repository\Response;
 use Illuminate\Http\JsonResponse;
@@ -39,16 +41,17 @@ trait MakesResponses
      * @param Model|Builder|RepositoryException $data
      * @param Transformer                       $transformer
      * @param string                            $action
+     * @param BaseModel|Model|string            $model
      *
      * @return JsonResponse
      * @throws ReflectionException
      */
-    public function respond($data, $transformer, $action)
+    public function respond($data, $transformer = null , $action = null, $model = null)
     {
         if ($data instanceof RepositoryException) {
             $this->prepareRepositoryExceptionResponse($data);
         } else {
-            $this->prepareResponse($data, $transformer, $action);
+            $this->prepareResponse($data, $transformer, $action, $model);
         }
 
         return $this->response->respond($this->status);
@@ -60,31 +63,41 @@ trait MakesResponses
      * @param Model|Collection|RepositoryException|LengthAwarePaginator $data
      * @param Transformer                                               $transformer
      * @param string                                                    $action
+     * @param BaseModel|Model|string                                           $model
      *
      * @return void
+     * @throws ReflectionException
      */
-    private function prepareResponse($data, $transformer, $action)
+    private function prepareResponse($data, $transformer, $action, $model)
     {
+        if ($model instanceof BaseModel) {
+            $modelName = $model->getModelName();
+        } elseif (is_string($model)) {
+            $modelName = $model;
+        } else {
+            $modelName = 'Model';
+        }
+        
         switch ($action) {
             case 'index':
                 $this->status = HTTPResponse::HTTP_OK;
-                $message = 'Indexed';
+                $message = __('repository.success.index');
                 break;
             case 'store':
                 $this->status = HTTPResponse::HTTP_CREATED;
-                $message = 'Created';
+                $message = __('repository.success.create', ['entity' => $modelName]);
                 break;
             case 'show':
                 $this->status = HTTPResponse::HTTP_OK;
-                $message = 'Shown';
+                $message = __('repository.success.read', ['entity' => $modelName]);
                 break;
             case 'update':
                 $this->status = HTTPResponse::HTTP_OK;
-                $message = 'Updated';
+                $message = __('repository.success.update', ['entity' => $modelName]);
                 break;
             case 'destroy':
                 $this->status = HTTPResponse::HTTP_ACCEPTED;
-                $message = 'Deleted';
+                $message = __('repository.success.delete', ['entity' => $modelName]);
                 break;
             default:
                 $this->status = null;
