@@ -2,6 +2,8 @@
 
 namespace ASP\Repository\Exceptions;
 
+use Illuminate\Http\Response;
+
 class ValidationException extends RepositoryException
 {
     /**
@@ -17,6 +19,6 @@ class ValidationException extends RepositoryException
         /* Status code set to 422 to mainting consistency with Laravel, see:
          * https://laravel.com/docs/5.8/validation#quick-ajax-requests-and-validation
          */
-        parent::__construct(null, UNPROCESSABLE, $message, $errors);
+        parent::__construct(null, Response::HTTP_UNPROCESSABLE_ENTITY, $message, $errors);
     }
 }
