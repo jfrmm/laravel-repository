@@ -2,7 +2,6 @@
 
 namespace ASP\Repository\Base;
 
-use ASP\Repository\Traits\GetsStaticClassName;
 use ReflectionClass;
 use ReflectionException;
 
@@ -17,7 +16,6 @@ use ReflectionException;
  */
 class Model extends \Illuminate\Database\Eloquent\Model
 {
-    use GetsStaticClassName;
     /**
      * Get Model name through reflection
      *
@@ -26,6 +24,6 @@ class Model extends \Illuminate\Database\Eloquent\Model
      */
     public static function getModelName()
     {
-        return (new ReflectionClass(static::getClassName()))->getShortName();;
+        return (new ReflectionClass(get_called_class()))->getShortName();;
     }
 }

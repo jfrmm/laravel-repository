@@ -34,10 +34,11 @@ provider and facades as they will be registered automatically._
 
 #### Publishing resources
 
-To publish the available translations to your application, for customization, just run:
+To publish the available translations and config to your application, for customization, just run:
 
 ```shell
-php artisan vendor:publish --tag=repository
+php artisan vendor:publish --tag=repository.translations
+php artisan vendor:publish --tag=repository.config
 ```
 
 ## Usage
