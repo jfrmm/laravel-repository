@@ -46,7 +46,7 @@ trait MakesResponses
      * @return JsonResponse
      * @throws ReflectionException
      */
-    public function respond($data, $transformer = null , $action = null, $model = null)
+    public function respond($data, $transformer = null, $action = null, $model = null)
     {
         if ($data instanceof RepositoryException) {
             $this->prepareRepositoryExceptionResponse($data);
@@ -63,7 +63,7 @@ trait MakesResponses
      * @param Model|Collection|RepositoryException|LengthAwarePaginator $data
      * @param Transformer                                               $transformer
      * @param string                                                    $action
-     * @param BaseModel|Model|string                                           $model
+     * @param BaseModel|Model|string                                    $model
      *
      * @return void
      * @throws ReflectionException
@@ -81,7 +81,7 @@ trait MakesResponses
         switch ($action) {
             case 'index':
                 $this->status = HTTPResponse::HTTP_OK;
-                $message = __('repository::repository.success.index');
+                $message = __('repository::repository.success.index', ['entity' => $modelName]);
                 break;
             case 'store':
                 $this->status = HTTPResponse::HTTP_CREATED;

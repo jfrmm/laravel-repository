@@ -2,7 +2,7 @@
 
 return [
     'success' => [
-        'index' => 'Got all the records',
+        'index' => ':Entity successfully listed',
         'create' => ':Entity successfully created',
         'read' => ':Entity successfully shown',
         'update' => ':Entity successfully updated',

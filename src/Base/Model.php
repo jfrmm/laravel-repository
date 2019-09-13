@@ -24,6 +24,6 @@ class Model extends \Illuminate\Database\Eloquent\Model
      */
     public static function getModelName()
     {
-        return (new ReflectionClass(get_called_class()))->getShortName();;
+        return (new ReflectionClass(get_called_class()))->getShortName();
     }
 }
