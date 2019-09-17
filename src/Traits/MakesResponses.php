@@ -44,6 +44,7 @@ trait MakesResponses
      * @param BaseModel|Model|string            $model
      *
      * @return JsonResponse
+     * 
      * @throws ReflectionException
      */
     public function respond($data, $transformer = null, $action = null, $model = null)
@@ -66,6 +67,7 @@ trait MakesResponses
      * @param BaseModel|Model|string                                    $model
      *
      * @return void
+     * 
      * @throws ReflectionException
      */
     private function prepareResponse($data, $transformer, $action, $model)
@@ -96,7 +98,7 @@ trait MakesResponses
                 $message = __('repository::repository.success.update', ['entity' => $modelName]);
                 break;
             case 'destroy':
-                $this->status = HTTPResponse::HTTP_ACCEPTED;
+                $this->status = HTTPResponse::HTTP_OK;
                 $message = __('repository::repository.success.delete', ['entity' => $modelName]);
                 break;
             default:
@@ -110,7 +112,7 @@ trait MakesResponses
         } elseif ($data instanceof LengthAwarePaginator) {
             $metadata = $this->getPaginationProperties($data);
             $this->success($data->items(), $transformer);
-            $this->withPagination($metadata);
+            $this->withPagination($metadata, $message);
         }
     }
 
@@ -120,6 +122,7 @@ trait MakesResponses
      * @param RepositoryException $exception
      *
      * @return void
+     * 
      * @throws ReflectionException
      */
     private function prepareRepositoryExceptionResponse(RepositoryException $exception)
@@ -171,13 +174,20 @@ trait MakesResponses
     /**
      * Add pagination data
      *
-     * @param array|null $paginationData
+     * @param array|null  $paginationData
+     * @param string|null $message
      *
      * @return MakesResponses
      */
-    private function withPagination(array $paginationData = null)
+    private function withPagination(array $paginationData = null, string $message = null)
     {
-        $this->response = $this->response->meta(['pagination' => $paginationData]);
+        $meta = ['pagination' => $paginationData];
+
+        if(!is_null($message)) {
+            $meta['message'] = $message;
+        }
+
+        $this->response = $this->response->meta($meta);
 
         return $this;
     }
