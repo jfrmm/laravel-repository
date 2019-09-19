@@ -19,9 +19,11 @@ trait Repository
 {
     /**
      * Filter a result set.
+     * 
+     * Please refer to ASP\Repository\Filter for more info.
      *
-     * @param  Builder $query
-     * @param  Filter  $filters
+     * @param Builder $query
+     * @param Filter  $filters
      *
      * @return Builder
      */
