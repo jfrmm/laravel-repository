@@ -1,7 +1,7 @@
-# ASP Repository
+# ASP Laravel Repository
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
-[![Total Downloads](https://img.shields.io/packagist/dt/asp/repository.svg?style=flat-square)](https://packagist.org/packages/asp/repositroy)
+[![Total Downloads](https://img.shields.io/packagist/dt/asp/laravel-repository.svg?style=flat-square)](https://packagist.org/packages/asp/laravel-repository)
 
 This is a library created to provide an easy way to develop a Model's CRUD in laravel.<br>
 It provides several traits and classes to allow you to create Controllers that handle automaticaly pagination and 
@@ -15,7 +15,7 @@ This package requires:
 - Laravel __5.1__+ or Lumen __5.1__+
 
 ## Install
-`composer require asp/repository`
+`composer require asp/laravel-repository`
 
 ### Laravel
 

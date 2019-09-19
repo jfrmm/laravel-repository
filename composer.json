@@ -1,5 +1,5 @@
 {
-    "name": "asp-devteam/repository",
+    "name": "asp-devteam/laravel-repository",
     "description": "Library created to provide an easy way to develop a Model's CRUD in laravel.",
     "type": "library",
     "license": "MIT",
