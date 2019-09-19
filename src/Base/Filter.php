@@ -6,6 +6,19 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Builder;
 
+/**
+ * Based on Jeffrey Way's Laracast's dedicated Query String Filtering,
+ * aims at being a simple way to create dedicated filters per model.
+ * 
+ * We can make use of https://laravel.com/docs/5.8/eloquent#global-scopes
+ * to apply an Eloquent Global Scope to a Model, and thus, apply any
+ * query params as filtering values.
+ * 
+ * This functionality is used by ASP\Repository\Traits\Repository.
+ *
+ * @link https://laracasts.com/series/eloquent-techniques/episodes/4
+ * @link https://github.com/laracasts/Dedicated-Query-String-Filtering
+ */
 abstract class Filter
 {
     /**
