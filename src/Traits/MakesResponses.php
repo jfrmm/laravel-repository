@@ -34,7 +34,7 @@ trait MakesResponses
     private $response;
 
     /**
-     * @var integer
+     * @var int
      */
     private $status;
 
@@ -82,7 +82,7 @@ trait MakesResponses
         } else {
             $modelName = 'Model';
         }
-        
+
         switch ($action) {
             case 'index':
                 $this->status = HTTPResponse::HTTP_OK;
@@ -225,7 +225,7 @@ trait MakesResponses
         $this->status = $this->status ?? HTTPResponse::HTTP_INTERNAL_SERVER_ERROR;
 
         if ($dismissible) {
-            if (empty($errors)) {
+            if (is_null($errors)) {
                 $errors = [Response::DISMISSIBLE => $dismissible];
             } else {
                 $errors[Response::DISMISSIBLE] = $dismissible;

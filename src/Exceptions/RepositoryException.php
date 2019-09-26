@@ -58,7 +58,7 @@ class RepositoryException extends Exception
      * Constructor.
      *
      * @param Model      $model
-     * @param integer    $status
+     * @param int        $status
      * @param string     $message
      * @param array|null $data
      * @param bool       $dismissible

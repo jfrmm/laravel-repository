@@ -37,21 +37,21 @@ trait Repository
     /**
      * Return all the records in the database.
      *
-     * @param array|null $pagination
-     * @param Filter     $filters
+     * @param array|null    $pagination
+     * @param Filter|null   $filters
      *
-     * @return Collection|Model[]|LengthAwarePaginator|IndexException
+     * @return Collection|Model|LengthAwarePaginator|IndexException
      */
     protected static function getAllRecords(array $pagination = null, Filter $filters = null)
     {
         try {
             $builder = self::query();
 
-            if (!empty($filters)) {
+            if (! is_null($filters)) {
                 $builder = $builder->filter($filters);
             }
 
-            if (!empty($pagination)) {
+            if (! is_null($pagination)) {
                 return $builder->paginate(
                     $pagination['size'],
                     ['*'],
@@ -71,7 +71,7 @@ trait Repository
      *
      * @param mixed $id
      *
-     * @return Model|Collection|Builder|Builder[]|ReadException
+     * @return Model|Collection|Builder|ReadException
      */
     protected static function getRecordById($id)
     {
@@ -208,7 +208,7 @@ trait Repository
          */
         return tap(
             self::getRecordById($id),
-            function ($record) {
+            static function ($record) {
                 if ($record instanceof ReadException) {
                     throw new \Exception($record->getMessage());
                 }

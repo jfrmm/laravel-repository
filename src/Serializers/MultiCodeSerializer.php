@@ -43,7 +43,7 @@ class MultiCodeSerializer extends FluggSuccessSerializer
         return [
             Response::STATUS => $status,
             Response::MESSAGE => $message,
-            Response::RESPONSES => $responses
+            Response::RESPONSES => $responses,
         ];
     }
 }

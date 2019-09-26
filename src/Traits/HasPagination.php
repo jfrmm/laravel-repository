@@ -57,10 +57,10 @@ trait HasPagination
         }
 
         return [
-            'current_page' => (int)$paginator->currentPage(),
-            'page_size' => (int)$paginator->perPage(),
-            'last_page' => (bool)($paginator->currentPage() >= $paginator->lastPage()),
-            'total' => (int)$paginator->total()
+            'current_page' => (int) $paginator->currentPage(),
+            'page_size' => (int) $paginator->perPage(),
+            'last_page' => (bool) ($paginator->currentPage() >= $paginator->lastPage()),
+            'total' => (int) $paginator->total(),
         ];
     }
 }
