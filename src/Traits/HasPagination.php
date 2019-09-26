@@ -14,9 +14,9 @@ trait HasPagination
     /**
      * Array of pagination properties for the model
      *
-     * @var array
+     * @var array|null
      */
-    protected $pagination = [];
+    protected $pagination = null;
 
     /**
      * Array of pagination properties for the model
