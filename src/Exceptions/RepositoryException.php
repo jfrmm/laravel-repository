@@ -83,7 +83,7 @@ class RepositoryException extends Exception
         $this->data = $data ?? $this->setExceptionData();
         $this->dismissible = $dismissible;
 
-        if (!empty($this->model)) {
+        if (! $this->model) {
             $modelName = $model instanceof Model ? $model->getModelName() : 'Model';
             $this->message = $message ?? __($this->crud, ['entity' => $modelName]);
         }
@@ -104,7 +104,7 @@ class RepositoryException extends Exception
             'line' => $this->getLine(),
         ];
 
-        if (!App::environment('prod')) {
+        if (! App::environment('prod')) {
             $data['trace'] = $this->getTraceAsString();
         }
 

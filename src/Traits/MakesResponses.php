@@ -186,7 +186,7 @@ trait MakesResponses
     {
         $meta = ['pagination' => $paginationData];
 
-        if (!is_null($message)) {
+        if (! is_null($message)) {
             $meta['message'] = $message;
         }
 

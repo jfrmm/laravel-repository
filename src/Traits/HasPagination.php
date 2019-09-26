@@ -35,7 +35,7 @@ trait HasPagination
     public function createPagination(Request $request)
     {
         foreach ($request->only(['page', 'size']) as $name => $value) {
-            if (empty($name)) {
+            if (! $name) {
                 continue;
             }
             $name = Str::camel($name);
@@ -46,13 +46,13 @@ trait HasPagination
     /**
      * Get the pagination metadata
      *
-     * @param LengthAwarePaginator $paginator
+     * @param LengthAwarePaginator|null $paginator
      *
      * @return array|null
      */
-    public function getPaginationProperties(LengthAwarePaginator $paginator)
+    public function getPaginationProperties(LengthAwarePaginator $paginator = null)
     {
-        if (empty($paginator)) {
+        if (is_null($paginator)) {
             return null;
         }
 
