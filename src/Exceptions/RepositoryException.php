@@ -2,16 +2,18 @@
 
 namespace ASP\Repository\Exceptions;
 
-use ASP\Repository\Base\Model;
 use Exception;
 use ReflectionClass;
-use Illuminate\Support\Str;
+use ReflectionException;
+use ASP\Repository\Base\Model;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
 use ASP\Repository\Traits\MakesResponses;
-use ReflectionException;
 use Symfony\Component\HttpFoundation\Response as HTTPResponse;
 
+/**
+ * @package ASP\Repository\Exceptions
+ */
 class RepositoryException extends Exception
 {
     use MakesResponses;
@@ -56,7 +58,7 @@ class RepositoryException extends Exception
      * Constructor.
      *
      * @param Model      $model
-     * @param integer    $status
+     * @param int        $status
      * @param string     $message
      * @param array|null $data
      * @param bool       $dismissible
@@ -81,7 +83,7 @@ class RepositoryException extends Exception
         $this->data = $data ?? $this->setExceptionData();
         $this->dismissible = $dismissible;
 
-        if (!empty($this->model)) {
+        if (! $this->model) {
             $modelName = $model instanceof Model ? $model->getModelName() : 'Model';
             $this->message = $message ?? __($this->crud, ['entity' => $modelName]);
         }
@@ -102,7 +104,7 @@ class RepositoryException extends Exception
             'line' => $this->getLine(),
         ];
 
-        if (!App::environment('prod')) {
+        if (! App::environment('prod')) {
             $data['trace'] = $this->getTraceAsString();
         }
 

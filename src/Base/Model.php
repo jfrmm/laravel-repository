@@ -20,6 +20,7 @@ class Model extends \Illuminate\Database\Eloquent\Model
      * Get Model name through reflection
      *
      * @return string
+     *
      * @throws ReflectionException
      */
     public static function getModelName()

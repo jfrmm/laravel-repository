@@ -2,6 +2,9 @@
 
 namespace ASP\Repository\Exceptions;
 
+/**
+ * @package ASP\Repository\Exceptions
+ */
 class IndexException extends RepositoryException
 {
     /**

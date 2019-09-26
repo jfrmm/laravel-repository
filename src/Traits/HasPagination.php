@@ -6,14 +6,17 @@ use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Str;
 
+/**
+ * @package ASP\Repository\Traits
+ */
 trait HasPagination
 {
     /**
      * Array of pagination properties for the model
      *
-     * @var array
+     * @var array|null
      */
-    protected $pagination = array();
+    protected $pagination = null;
 
     /**
      * Array of pagination properties for the model
@@ -32,7 +35,7 @@ trait HasPagination
     public function createPagination(Request $request)
     {
         foreach ($request->only(['page', 'size']) as $name => $value) {
-            if (empty($name)) {
+            if (! $name) {
                 continue;
             }
             $name = Str::camel($name);
@@ -43,21 +46,21 @@ trait HasPagination
     /**
      * Get the pagination metadata
      *
-     * @param LengthAwarePaginator $paginator
+     * @param LengthAwarePaginator|null $paginator
      *
      * @return array|null
      */
-    public function getPaginationProperties(LengthAwarePaginator $paginator)
+    public function getPaginationProperties(LengthAwarePaginator $paginator = null)
     {
-        if (empty($paginator)) {
+        if (is_null($paginator)) {
             return null;
         }
 
         return [
-            'current_page' => (int)$paginator->currentPage(),
-            'page_size' => (int)$paginator->perPage(),
-            'last_page' => (bool)($paginator->currentPage() >= $paginator->lastPage()),
-            'total' => (int)$paginator->total()
+            'current_page' => (int) $paginator->currentPage(),
+            'page_size' => (int) $paginator->perPage(),
+            'last_page' => (bool) ($paginator->currentPage() >= $paginator->lastPage()),
+            'total' => (int) $paginator->total(),
         ];
     }
 }

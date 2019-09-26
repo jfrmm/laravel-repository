@@ -9,7 +9,7 @@ use Flugg\Responder\Serializers\SuccessSerializer as FluggSuccessSerializer;
 /**
  * Class MultiCodeSerializer
  *
- * @package App\Serializers
+ * @package ASP\Repository\Serializers
  */
 class MultiCodeSerializer extends FluggSuccessSerializer
 {
@@ -43,7 +43,7 @@ class MultiCodeSerializer extends FluggSuccessSerializer
         return [
             Response::STATUS => $status,
             Response::MESSAGE => $message,
-            Response::RESPONSES => $responses
+            Response::RESPONSES => $responses,
         ];
     }
 }

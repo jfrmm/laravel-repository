@@ -4,6 +4,9 @@ namespace ASP\Repository\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
+/**
+ * @package ASP\Repository\Facades
+ */
 class Repository extends Facade
 {
     /**

@@ -2,22 +2,25 @@
 
 namespace ASP\Repository\Traits;
 
-use ASP\Repository\Base\Model as BaseModel;
-use Illuminate\Database\Eloquent\Builder;
 use ReflectionClass;
+use ReflectionException;
 use ASP\Repository\Response;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
+use ASP\Repository\Base\Model as BaseModel;
 use Flugg\Responder\Transformers\Transformer;
 use ASP\Repository\Serializers\ErrorSerializer;
 use Illuminate\Pagination\LengthAwarePaginator;
 use ASP\Repository\Exceptions\RepositoryException;
 use Flugg\Responder\Http\Responses\ErrorResponseBuilder;
 use Flugg\Responder\Http\Responses\SuccessResponseBuilder;
-use ReflectionException;
 use Symfony\Component\HttpFoundation\Response as HTTPResponse;
 
+/**
+ * @package ASP\Repository\Traits
+ */
 trait MakesResponses
 {
     use \Flugg\Responder\Http\MakesResponses {
@@ -31,7 +34,7 @@ trait MakesResponses
     private $response;
 
     /**
-     * @var integer
+     * @var int
      */
     private $status;
 
@@ -44,7 +47,7 @@ trait MakesResponses
      * @param BaseModel|Model|string            $model
      *
      * @return JsonResponse
-     * 
+     *
      * @throws ReflectionException
      */
     public function respond($data, $transformer = null, $action = null, $model = null)
@@ -67,7 +70,7 @@ trait MakesResponses
      * @param BaseModel|Model|string                                    $model
      *
      * @return void
-     * 
+     *
      * @throws ReflectionException
      */
     private function prepareResponse($data, $transformer, $action, $model)
@@ -79,7 +82,7 @@ trait MakesResponses
         } else {
             $modelName = 'Model';
         }
-        
+
         switch ($action) {
             case 'index':
                 $this->status = HTTPResponse::HTTP_OK;
@@ -122,7 +125,7 @@ trait MakesResponses
      * @param RepositoryException $exception
      *
      * @return void
-     * 
+     *
      * @throws ReflectionException
      */
     private function prepareRepositoryExceptionResponse(RepositoryException $exception)
@@ -183,7 +186,7 @@ trait MakesResponses
     {
         $meta = ['pagination' => $paginationData];
 
-        if(!is_null($message)) {
+        if (! is_null($message)) {
             $meta['message'] = $message;
         }
 
@@ -222,7 +225,7 @@ trait MakesResponses
         $this->status = $this->status ?? HTTPResponse::HTTP_INTERNAL_SERVER_ERROR;
 
         if ($dismissible) {
-            if (empty($errors)) {
+            if (is_null($errors)) {
                 $errors = [Response::DISMISSIBLE => $dismissible];
             } else {
                 $errors[Response::DISMISSIBLE] = $dismissible;

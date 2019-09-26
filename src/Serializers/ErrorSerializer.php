@@ -8,17 +8,17 @@ use Flugg\Responder\Serializers\ErrorSerializer as FluggErrorSerializer;
 /**
  * Class ErrorSerializer
  *
- * @package App\Serializers
+ * @package ASP\Repository\Serializers
  */
 class ErrorSerializer extends FluggErrorSerializer
 {
-
     /**
      * Format the error data.
      *
      * @param  mixed|null  $errorCode
      * @param  string|null $message
      * @param  array|null  $data
+     *
      * @return array
      */
     public function format($errorCode = null, string $message = null, array $data = null): array
@@ -27,13 +27,15 @@ class ErrorSerializer extends FluggErrorSerializer
             Response::STATUS => $errorCode,
             Response::MESSAGE => $message,
         ];
-        if (!empty($data)) {
+
+        if (! is_null($data)) {
             if (isset($data[Response::DISMISSIBLE])) {
                 $response[Response::DISMISSIBLE] = $data[Response::DISMISSIBLE];
                 unset($data[Response::DISMISSIBLE]);
             }
             $response[Response::DATA] = $data;
         }
+
         return $response;
     }
 }
