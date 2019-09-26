@@ -2,7 +2,7 @@
 
 namespace ASP\Repository\Traits;
 
-use ASP\Repository\Filter;
+use ASP\Repository\Base\Filter;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
@@ -22,7 +22,7 @@ trait Repository
     /**
      * Filter a result set.
      *
-     * Please refer to ASP\Repository\Filter for more info.
+     * Please refer to ASP\Repository\Base\Filter for more info.
      *
      * @param Builder $query
      * @param Filter  $filters
