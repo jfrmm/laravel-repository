@@ -2,7 +2,6 @@
 
 namespace ASP\Repository\Traits;
 
-use Exception;
 use ASP\Repository\Filter;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Model;
@@ -36,7 +35,7 @@ trait Repository
     }
 
     /**
-     * Return all the records in the database
+     * Return all the records in the database.
      *
      * @param array|null $pagination
      * @param Filter     $filters
@@ -62,13 +61,13 @@ trait Repository
             }
 
             return $builder->get();
-        } catch (Exception $e) {
-            return new IndexException(null, null, $e->getMessage());
+        } catch (\Exception $exception) {
+            return new IndexException(null, null, $exception->getMessage());
         }
     }
 
     /**
-     * Get the specified record from the database
+     * Get the specified record from the database.
      *
      * @param mixed $id
      *
@@ -78,40 +77,55 @@ trait Repository
     {
         try {
             return self::findOrFail($id);
-        } catch (Exception $e) {
-            return new ReadException(null, null, $e->getMessage());
+        } catch (\Exception $exception) {
+            return new ReadException(null, null, $exception->getMessage());
         }
     }
 
     /**
-     * Create a new record in the database
+     * Create a new record in the database.
      *
      * @param Request $request
      *
-     * @return Model|null|CreateException
+     * @return Model|CreateException|null
      */
-    protected static function createRecord(Request $request)
+    final protected static function createRecord(Request $request)
     {
         try {
             $validation = self::validateCreate($request);
 
             if ($validation !== true) {
                 return $validation;
-            } else {
-                return self::create($request->all())->fresh();
             }
-        } catch (Exception $e) {
-            return new CreateException(null, null, $e->getMessage());
+
+            return self::commitCreateRecord($request);
+        } catch (\Exception $exception) {
+            return new CreateException(null, null, $exception->getMessage());
         }
     }
 
     /**
-     * Update the specified record in the database
+     * Commit to create a new record in the database.
+     * Override this method when you need to add business logic.
+     *
+     * @param Request $request
+     *
+     * @return Model|null
+     *
+     * @throws \Exception
+     */
+    private static function commitCreateRecord(Request $request)
+    {
+        return self::create($request->all())->fresh();
+    }
+
+    /**
+     * Update the specified record in the database.
      *
      * @param mixed   $id
      * @param Request $request
      *
-     * @return Model|null|UpdateException
+     * @return Model|UpdateException|null
      */
     protected static function updateRecordById($id, Request $request)
     {
@@ -120,36 +134,45 @@ trait Repository
 
             if ($validation !== true) {
                 return $validation;
-            } else {
-                /**
-                 * Read more about tap()
-                 *
-                 * @link https://medium.com/@taylorotwell/tap-tap-tap-1fc6fc1f93a6
-                 */
-                return tap(
-                    self::getRecordById($id),
-                    function ($record) use ($request) {
-                        if ($record instanceof ReadException) {
-                            throw new Exception($record->getMessage());
-                        }
-
-                        $record->update($request->all());
-                        $record->fresh();
-                    }
-                );
             }
-        } catch (Exception $e) {
-            return new UpdateException(null, null, $e->getMessage());
+
+            return self::commitUpdateRecordById($id, $request);
+        } catch (\Exception $exception) {
+            return new UpdateException(null, null, $exception->getMessage());
         }
     }
 
     /**
-     * Delete the specified record from the database
+     * Commit to update the specified record in the database.
+     * Override this method when you need to add business logic.
      *
      * @param mixed   $id
      * @param Request $request
      *
-     * @return bool|null|DeleteException
+     * @return Model|null
+     *
+     * @throws \Exception
+     */
+    private static function commitUpdateRecordById($id, Request $request)
+    {
+        $record = self::getRecordById($id);
+
+        if ($record instanceof ReadException) {
+            throw new \Exception($record->getMessage());
+        }
+
+        $record->update($request->all());
+
+        return $record->fresh();
+    }
+
+    /**
+     * Delete the specified record from the database.
+     *
+     * @param mixed   $id
+     * @param Request $request
+     *
+     * @return bool|DeleteException|null
      */
     protected static function deleteRecordById($id, Request $request)
     {
@@ -158,25 +181,40 @@ trait Repository
 
             if ($validation !== true) {
                 return $validation;
-            } else {
-                /**
-                 * Read more about tap()
-                 *
-                 * @link https://medium.com/@taylorotwell/tap-tap-tap-1fc6fc1f93a6
-                 */
-                return tap(
-                    self::getRecordById($id),
-                    function ($record) {
-                        if ($record instanceof ReadException) {
-                            throw new Exception($record->getMessage());
-                        }
-
-                        $record->delete();
-                    }
-                );
             }
-        } catch (Exception $e) {
-            return new DeleteException(null, null, $e->getMessage());
+
+            return self::commitDeleteRecordById($id, $request);
+        } catch (\Exception $exception) {
+            return new DeleteException(null, null, $exception->getMessage());
         }
+    }
+
+    /**
+     * Commit to delete the specified record from the database.
+     * Override this method when you need to add business logic.
+     *
+     * @param mixed $id
+     *
+     * @return bool|null
+     *
+     * @throws \Exception
+     */
+    private static function commitDeleteRecordById($id)
+    {
+        /**
+         * Read more about tap()
+         *
+         * @link https://medium.com/@taylorotwell/tap-tap-tap-1fc6fc1f93a6
+         */
+        return tap(
+            self::getRecordById($id),
+            function ($record) {
+                if ($record instanceof ReadException) {
+                    throw new \Exception($record->getMessage());
+                }
+
+                $record->delete();
+            }
+        );
     }
 }
