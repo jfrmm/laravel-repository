@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Str;
 
+/**
+ * @package ASP\Repository\Traits
+ */
 trait HasPagination
 {
     /**
@@ -13,7 +16,7 @@ trait HasPagination
      *
      * @var array
      */
-    protected $pagination = array();
+    protected $pagination = [];
 
     /**
      * Array of pagination properties for the model

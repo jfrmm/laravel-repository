@@ -7,6 +7,9 @@ use ASP\Repository\Traits\MakesResponses;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 
+/**
+ * @package ASP\Repository\Base
+ */
 class Controller extends BaseController
 {
     use HasPagination, MakesResponses;

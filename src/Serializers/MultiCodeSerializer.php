@@ -9,7 +9,7 @@ use Flugg\Responder\Serializers\SuccessSerializer as FluggSuccessSerializer;
 /**
  * Class MultiCodeSerializer
  *
- * @package App\Serializers
+ * @package ASP\Repository\Serializers
  */
 class MultiCodeSerializer extends FluggSuccessSerializer
 {

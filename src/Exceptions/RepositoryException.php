@@ -2,16 +2,18 @@
 
 namespace ASP\Repository\Exceptions;
 
-use ASP\Repository\Base\Model;
 use Exception;
 use ReflectionClass;
-use Illuminate\Support\Str;
+use ReflectionException;
+use ASP\Repository\Base\Model;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
 use ASP\Repository\Traits\MakesResponses;
-use ReflectionException;
 use Symfony\Component\HttpFoundation\Response as HTTPResponse;
 
+/**
+ * @package ASP\Repository\Exceptions
+ */
 class RepositoryException extends Exception
 {
     use MakesResponses;

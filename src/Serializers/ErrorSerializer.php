@@ -8,7 +8,7 @@ use Flugg\Responder\Serializers\ErrorSerializer as FluggErrorSerializer;
 /**
  * Class ErrorSerializer
  *
- * @package App\Serializers
+ * @package ASP\Repository\Serializers
  */
 class ErrorSerializer extends FluggErrorSerializer
 {

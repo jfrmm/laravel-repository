@@ -15,11 +15,14 @@ use ASP\Repository\Exceptions\DeleteException;
 use ASP\Repository\Exceptions\UpdateException;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
+/**
+ * @package ASP\Repository\Traits
+ */
 trait Repository
 {
     /**
      * Filter a result set.
-     * 
+     *
      * Please refer to ASP\Repository\Filter for more info.
      *
      * @param Builder $query

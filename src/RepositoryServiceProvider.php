@@ -4,6 +4,9 @@ namespace ASP\Repository;
 
 use Illuminate\Support\ServiceProvider;
 
+/**
+ * @package ASP\Repository
+ */
 class RepositoryServiceProvider extends ServiceProvider
 {
     /**

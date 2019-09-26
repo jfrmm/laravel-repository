@@ -4,6 +4,9 @@ namespace ASP\Repository\Traits;
 
 use Illuminate\Http\Request;
 
+/**
+ * @package ASP\Repository\Traits
+ */
 trait ValidatorRules
 {
     /**

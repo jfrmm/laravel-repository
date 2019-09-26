@@ -1,6 +1,6 @@
 <?php
 
-namespace ASP\Repository;
+namespace ASP\Repository\Base;
 
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -18,6 +18,8 @@ use Illuminate\Database\Eloquent\Builder;
  *
  * @link https://laracasts.com/series/eloquent-techniques/episodes/4
  * @link https://github.com/laracasts/Dedicated-Query-String-Filtering
+ * 
+ * @package ASP\Repository\Base
  */
 abstract class Filter
 {
