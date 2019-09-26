@@ -143,10 +143,10 @@ trait YourModelValidator
 ```
 
 #### Using Filters
-To filter your Model queries you can extend `ASP\Repository\Filter`:
+To filter your Model queries you can extend `ASP\Repository\Base\Filter`:
 
 ```php
-use ASP\Repository\Filter;
+use ASP\Repository\Base\Filter;
 
 class PetFilters extends Filter
 {
