@@ -59,8 +59,13 @@ abstract class Filter
         foreach ($this->filters() as $name => $value) {
             $name = Str::camel($name);
 
-            if ($name === 'page' || $name === 'size') {
-                $this->pagination[$name] = $value;
+            if ($name === 'sortAsc') {
+                $this->sortAsc($value);
+                continue;
+            }
+
+            if ($name === 'sortDesc') {
+                $this->sortDesc($value);
                 continue;
             }
 
@@ -77,12 +82,36 @@ abstract class Filter
     }
 
     /**
-     * Get all request filters data.
+     * Get all request filters data, trim unneeded data.
      *
      * @return array
      */
     public function filters()
     {
-        return $this->request->except(['page', 'size']);
+        return $this->request->except(['page', 'size', 'with']);
+    }
+
+    /**
+     * Sort by the given field, in ascending order
+     *
+     * @param string $field
+     *
+     * @return Builder
+     */
+    private function sortAsc(string $field)
+    {
+        return $this->builder->orderBy($field, 'asc');
+    }
+
+    /**
+     * Sort by the given field, in descending order
+     *
+     * @param string $field
+     *
+     * @return Builder
+     */
+    private function sortDesc(string $field)
+    {
+        return $this->builder->orderBy($field, 'desc');
     }
 }
