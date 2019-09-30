@@ -38,6 +38,13 @@ abstract class Filter
     protected $builder;
 
     /**
+     * The fields by which we can sort the model
+     *
+     * @var array
+     */
+    protected $sortable = [];
+
+    /**
      * @param Request $request
      */
     public function __construct(Request $request)
@@ -100,7 +107,9 @@ abstract class Filter
      */
     private function sortAsc(string $field)
     {
-        return $this->builder->orderBy($field, 'asc');
+        if (in_array($field, $this->sortable)) {
+            return $this->builder->orderBy($field, 'asc');
+        }
     }
 
     /**
@@ -112,6 +121,8 @@ abstract class Filter
      */
     private function sortDesc(string $field)
     {
-        return $this->builder->orderBy($field, 'desc');
+        if (in_array($field, $this->sortable)) {
+            return $this->builder->orderBy($field, 'desc');
+        }
     }
 }
