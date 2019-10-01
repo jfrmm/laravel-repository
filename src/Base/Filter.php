@@ -38,6 +38,20 @@ abstract class Filter
     protected $builder;
 
     /**
+     * The fields by which we can sort the model
+     *
+     * @var array
+     */
+    protected $sortable = [];
+
+    /**
+     * The tables already joined to base table
+     *
+     * @var $joined
+     */
+    protected $joined = [];
+
+    /**
      * @param Request $request
      */
     public function __construct(Request $request)
@@ -59,8 +73,13 @@ abstract class Filter
         foreach ($this->filters() as $name => $value) {
             $name = Str::camel($name);
 
-            if ($name === 'page' || $name === 'size') {
-                $this->pagination[$name] = $value;
+            if ($name === 'sortAsc') {
+                $this->sortAsc($value);
+                continue;
+            }
+
+            if ($name === 'sortDesc') {
+                $this->sortDesc($value);
                 continue;
             }
 
@@ -77,12 +96,74 @@ abstract class Filter
     }
 
     /**
-     * Get all request filters data.
+     * Get all request filters data, trim unneeded data.
      *
      * @return array
      */
     public function filters()
     {
-        return $this->request->except(['page', 'size']);
+        return $this->request->except(['page', 'size', 'with']);
+    }
+
+    /**
+     * Sort by the given field, in ascending order
+     *
+     * @param string $field
+     *
+     * @return Builder
+     */
+    private function sortAsc(string $field)
+    {
+        if (in_array($field, $this->sortable)) {
+            return $this->builder->orderBy($field, 'asc');
+        }
+    }
+
+    /**
+     * Sort by the given field, in descending order
+     *
+     * @param string $field
+     *
+     * @return Builder
+     */
+    private function sortDesc(string $field)
+    {
+        if (in_array($field, $this->sortable)) {
+            return $this->builder->orderBy($field, 'desc');
+        }
+    }
+
+    /**
+     * Wrapper for Eloquent's join, this should be used whenever you need to filter a model with various other entities
+     * in a nested fashion.
+     * We strongly advise using joins over whereHas when you have nested relations because:
+     *  1 - The syntax is easier with join for many relations and more clear
+     *  2 - Join operations are much more optimized in database engines, as opposed to `exists in <subquery>`
+     *
+     * This wrapper maintains the list of currently joined entities so has to not join again. After you finished
+     * executing your query you should use resetFilterJoins()
+     *
+     * @param string $table
+     * @param string $first
+     * @param string $second
+     *
+     * @return Builder
+     */
+    protected function joinTables(string $table, string $first, string $second): Builder
+    {
+        if (in_array($table, $this->joined)) {
+            return $this->builder;
+        }
+
+        $this->joined[] = $table;
+        return $this->builder->join($table, $first, '=', $second);
+    }
+
+    /**
+     * Reset the list of currently joined entities
+     */
+    public function resetFilterJoins()
+    {
+        $this->joined = [];
     }
 }
