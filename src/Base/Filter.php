@@ -45,9 +45,16 @@ abstract class Filter
     protected $sortable = [];
 
     /**
+     * The sorts to be applied
+     *
+     * @var array
+     */
+    private $sorts = [];
+
+    /**
      * The tables already joined to base table
      *
-     * @var $joined
+     * @var array
      */
     protected $joined = [];
 
@@ -73,15 +80,7 @@ abstract class Filter
         foreach ($this->filters() as $name => $value) {
             $name = Str::camel($name);
 
-            if ($name === 'sortAsc') {
-                $this->sortAsc($value);
-                continue;
-            }
-
-            if ($name === 'sortDesc') {
-                $this->sortDesc($value);
-                continue;
-            }
+            $this->getSorts($name, $value);
 
             if (! method_exists($this, $name)) {
                 continue;
@@ -91,6 +90,8 @@ abstract class Filter
                 $this->$name($value);
             }
         }
+
+        $this->applySorts();
 
         return $this->builder;
     }
@@ -106,30 +107,63 @@ abstract class Filter
     }
 
     /**
-     * Sort by the given field, in ascending order
+     * Get the sorts from the request
      *
-     * @param string $field
+     * @param string $sort
+     * @param string $column
      *
-     * @return Builder
+     * @return void
      */
-    private function sortAsc(string $field)
+    private function getSorts(string $sort, string $column)
     {
-        if (in_array($field, $this->sortable)) {
-            return $this->builder->orderBy($field, 'asc');
+        if ($sort === 'sortAsc') {
+            $this->setSortAsc($column);
+        } elseif ($sort === 'sortDesc') {
+            $this->setSortDesc($column);
         }
     }
 
     /**
-     * Sort by the given field, in descending order
+     * Sort by the given column, in ascending order
      *
-     * @param string $field
+     * @param string $column
      *
      * @return Builder
      */
-    private function sortDesc(string $field)
+    private function setSortAsc(string $column)
     {
-        if (in_array($field, $this->sortable)) {
-            return $this->builder->orderBy($field, 'desc');
+        $table = with($this->builder->getModel())->getTable();
+
+        if (in_array($column, $this->sortable)) {
+            array_push($this->sorts, "{$table}.{$column} ASC");
+        }
+    }
+
+    /**
+     * Sort by the given column, in descending order
+     *
+     * @param string $column
+     *
+     * @return Builder
+     */
+    private function setSortDesc(string $column)
+    {
+        $table = with($this->builder->getModel())->getTable();
+
+        if (in_array($column, $this->sortable)) {
+            array_push($this->sorts, "{$table}.{$column} DESC");
+        }
+    }
+
+    /**
+     * Apply the sorts to the Builder
+     *
+     * @return Builder
+     */
+    private function applySorts()
+    {
+        if (count($this->sorts) > 0) {
+            return $this->builder->orderByRaw(implode(', ', $this->sorts));
         }
     }
 
