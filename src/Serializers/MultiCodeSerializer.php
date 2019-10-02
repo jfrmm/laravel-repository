@@ -18,13 +18,13 @@ class MultiCodeSerializer extends FluggSuccessSerializer
     /**
      * Format the error data.
      *
-     * @param null        $status
+     * @param int|null    $status
      * @param string|null $message
      * @param array|null  $data
      *
      * @return array
      */
-    public function format($status = null, string $message = null, $data = null): array
+    public function format(?int $status = null, ?string $message = null, ?array $data = null): array
     {
         $responses = [];
         foreach ($data[Response::RESPONSES] as $response) {

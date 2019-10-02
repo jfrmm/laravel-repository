@@ -42,7 +42,7 @@ trait Repository
      *
      * @return Collection|Model|LengthAwarePaginator|IndexException
      */
-    protected static function getAllRecords(array $pagination = null, Filter $filters = null)
+    protected static function getAllRecords(?array $pagination = null, ?Filter $filters = null)
     {
         try {
             $builder = self::query();

@@ -50,7 +50,7 @@ trait HasPagination
      *
      * @return array|null
      */
-    public function getPaginationProperties(LengthAwarePaginator $paginator = null)
+    public function getPaginationProperties(?LengthAwarePaginator $paginator = null)
     {
         if (is_null($paginator)) {
             return null;

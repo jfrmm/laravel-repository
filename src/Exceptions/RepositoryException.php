@@ -47,7 +47,7 @@ class RepositoryException extends Exception
     /**
      * @var bool
      */
-    private $dismissible;
+    protected $dismissible;
 
     /**
      * @var string
@@ -57,19 +57,21 @@ class RepositoryException extends Exception
     /**
      * Constructor.
      *
-     * @param Model      $model
-     * @param int        $status
-     * @param string     $message
-     * @param array|null $data
-     * @param bool       $dismissible
+     * @param Model|null      $model
+     * @param int|null        $status
+     * @param string|null     $message
+     * @param array|null      $data
+     * @param bool            $dismissible
+     *
+     * @return void
      *
      * @throws ReflectionException
      */
     public function __construct(
-        Model $model = null,
-        int $status = null,
-        string $message = null,
-        array $data = null,
+        ?Model $model = null,
+        ?int $status = null,
+        ?string $message = null,
+        ?array $data = null,
         $dismissible = false
     ) {
         parent::__construct();
