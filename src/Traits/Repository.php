@@ -60,7 +60,9 @@ trait Repository
                 );
             }
 
-            return $builder->get();
+            $table = with($builder->getModel())->getTable();
+
+            return $builder->distinct()->get(["{$table}.*"]);
         } catch (\Exception $exception) {
             return new IndexException(null, null, $exception->getMessage());
         }

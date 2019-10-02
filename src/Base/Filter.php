@@ -180,6 +180,9 @@ abstract class Filter
      *
      * This wrapper maintains the list of currently joined entities so has to not join again. After you finished
      * executing your query you should use resetFilterJoins()
+     * 
+     * Take note that, when performing joins, you'll have issues with same name columns, so, prefix your column
+     * names accordingly
      *
      * @param string $table
      * @param string $first
