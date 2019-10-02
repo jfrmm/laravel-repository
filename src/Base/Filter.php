@@ -110,12 +110,16 @@ abstract class Filter
      * Get the sorts from the request
      *
      * @param string $sort
-     * @param string $column
+     * @param string|null $column
      *
      * @return void
      */
-    private function getSorts(string $sort, string $column)
+    private function getSorts(string $sort, ?string $column = null)
     {
+        if (is_null($column)) {
+            return;
+        }
+
         if ($sort === 'sortAsc') {
             $this->setSortAsc($column);
         } elseif ($sort === 'sortDesc') {
