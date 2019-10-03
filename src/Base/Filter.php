@@ -110,12 +110,16 @@ abstract class Filter
      * Get the sorts from the request
      *
      * @param string $sort
-     * @param string $column
+     * @param string|null $column
      *
      * @return void
      */
-    private function getSorts(string $sort, string $column)
+    private function getSorts(string $sort, ?string $column = null)
     {
+        if (is_null($column)) {
+            return;
+        }
+
         if ($sort === 'sortAsc') {
             $this->setSortAsc($column);
         } elseif ($sort === 'sortDesc') {
@@ -176,6 +180,9 @@ abstract class Filter
      *
      * This wrapper maintains the list of currently joined entities so has to not join again. After you finished
      * executing your query you should use resetFilterJoins()
+     * 
+     * Take note that, when performing joins, you'll have issues with same name columns, so, prefix your column
+     * names accordingly
      *
      * @param string $table
      * @param string $first

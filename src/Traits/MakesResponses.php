@@ -167,7 +167,7 @@ trait MakesResponses
      *
      * @return MakesResponses
      */
-    private function withMessage(string $message = null)
+    private function withMessage(?string $message = null)
     {
         $this->response = $this->response->meta(['message' => $message]);
 
@@ -182,7 +182,7 @@ trait MakesResponses
      *
      * @return MakesResponses
      */
-    private function withPagination(array $paginationData = null, string $message = null)
+    private function withPagination(?array $paginationData = null, ?string $message = null)
     {
         $meta = ['pagination' => $paginationData];
 
@@ -220,7 +220,7 @@ trait MakesResponses
      *
      * @return MakesResponses
      */
-    private function error(string $message = null, $errors = null, $dismissible = false)
+    private function error(?string $message = null, ?array $errors = null, $dismissible = false)
     {
         $this->status = $this->status ?? HTTPResponse::HTTP_INTERNAL_SERVER_ERROR;
 

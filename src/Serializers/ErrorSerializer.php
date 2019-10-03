@@ -21,7 +21,7 @@ class ErrorSerializer extends FluggErrorSerializer
      *
      * @return array
      */
-    public function format($errorCode = null, string $message = null, array $data = null): array
+    public function format($errorCode = null, ?string $message = null, ?array $data = null): array
     {
         $response = [
             Response::STATUS => $errorCode,

@@ -42,7 +42,7 @@ trait Repository
      *
      * @return Collection|Model|LengthAwarePaginator|IndexException
      */
-    protected static function getAllRecords(array $pagination = null, Filter $filters = null)
+    protected static function getAllRecords(?array $pagination = null, ?Filter $filters = null)
     {
         try {
             $builder = self::query();
@@ -60,7 +60,9 @@ trait Repository
                 );
             }
 
-            return $builder->get();
+            $table = with($builder->getModel())->getTable();
+
+            return $builder->distinct()->get(["{$table}.*"]);
         } catch (\Exception $exception) {
             return new IndexException(null, null, $exception->getMessage());
         }
