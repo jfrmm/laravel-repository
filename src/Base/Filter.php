@@ -80,13 +80,17 @@ abstract class Filter
         foreach ($this->filters() as $name => $value) {
             $name = Str::camel($name);
 
-            $this->getSorts($name, $value);
+            if (! is_array($value)) {
+                $this->getSorts($name, $value);
 
-            if (! method_exists($this, $name)) {
-                continue;
+                $value = [$value];
+                
+                if (! method_exists($this, $name)) {
+                    continue;
+                }
             }
 
-            if (strlen($value)) {
+            if (count($value) > 0) {
                 $this->$name($value);
             }
         }
@@ -121,9 +125,9 @@ abstract class Filter
         }
 
         if ($sort === 'sortAsc') {
-            $this->setSortAsc($column);
+            $this->updateSortAsc($column);
         } elseif ($sort === 'sortDesc') {
-            $this->setSortDesc($column);
+            $this->updateSortDesc($column);
         }
     }
 
@@ -134,7 +138,7 @@ abstract class Filter
      *
      * @return Builder
      */
-    private function setSortAsc(string $column)
+    private function updateSortAsc(string $column)
     {
         $table = with($this->builder->getModel())->getTable();
 
@@ -150,7 +154,7 @@ abstract class Filter
      *
      * @return Builder
      */
-    private function setSortDesc(string $column)
+    private function updateSortDesc(string $column)
     {
         $table = with($this->builder->getModel())->getTable();
 
@@ -180,7 +184,7 @@ abstract class Filter
      *
      * This wrapper maintains the list of currently joined entities so has to not join again. After you finished
      * executing your query you should use resetFilterJoins()
-     * 
+     *
      * Take note that, when performing joins, you'll have issues with same name columns, so, prefix your column
      * names accordingly
      *
