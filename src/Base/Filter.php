@@ -78,21 +78,28 @@ abstract class Filter
         $this->builder = $builder;
 
         foreach ($this->filters() as $name => $value) {
-            $name = Str::camel($name);
-
             if (! is_array($value)) {
-                $this->getSorts($name, $value);
+                if ($this->hasSorts($name, $value)) {
+                    $this->setSorts($name, $value);
+                    continue;
+                }
 
-                $value = [$value];
-                
-                if (! method_exists($this, $name)) {
+                if (is_null($value)) {
+                    continue;
+                }
+            } else {
+                if (count($value) === 0) {
                     continue;
                 }
             }
 
-            if (count($value) > 0) {
-                $this->$name($value);
+            $name = Str::camel($name);
+
+            if (! method_exists($this, $name)) {
+                continue;
             }
+
+            $this->$name($value);
         }
 
         $this->applySorts();
@@ -111,23 +118,38 @@ abstract class Filter
     }
 
     /**
-     * Get the sorts from the request
+     * Checks if we have sorts in the request
+     *
+     * @param string $sort
+     * @param string|null $column
+     *
+     * @return bool
+     */
+    private function hasSorts(string $sort, ?string $column = null): bool
+    {
+        if (! is_null($column) && $sort === 'sort_by') {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Get the sorts from the request and store them
      *
      * @param string $sort
      * @param string|null $column
      *
      * @return void
      */
-    private function getSorts(string $sort, ?string $column = null)
+    private function setSorts(string $sort, ?string $column = null)
     {
-        if (is_null($column)) {
-            return;
-        }
-
-        if ($sort === 'sortAsc') {
-            $this->updateSortAsc($column);
-        } elseif ($sort === 'sortDesc') {
-            $this->updateSortDesc($column);
+        foreach (explode(',', $column) as $sort) {
+            if (preg_match('/.asc$/', $sort)) {
+                $this->updateSortAsc(substr($sort, 0, -4));
+            } elseif (preg_match('/.desc$/', $sort)) {
+                $this->updateSortDesc(substr($sort, 0, -5));
+            }
         }
     }
 
@@ -136,7 +158,7 @@ abstract class Filter
      *
      * @param string $column
      *
-     * @return Builder
+     * @return void
      */
     private function updateSortAsc(string $column)
     {
@@ -152,7 +174,7 @@ abstract class Filter
      *
      * @param string $column
      *
-     * @return Builder
+     * @return void
      */
     private function updateSortDesc(string $column)
     {
