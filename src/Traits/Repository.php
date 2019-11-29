@@ -52,8 +52,10 @@ trait Repository
             }
 
             if (! is_null($pagination)) {
+                $size = array_key_exists('size', $pagination) ? $pagination['size']: 10;
+
                 return $builder->paginate(
-                    $pagination['size'],
+                    $size,
                     ['*'],
                     'page',
                     $pagination['page']
