@@ -4,17 +4,20 @@
 [![Total Downloads](https://img.shields.io/packagist/dt/asp/laravel-repository.svg?style=flat-square)](https://packagist.org/packages/asp-devteam/laravel-repository)
 
 This is a library created to provide an easy way to develop a Model's CRUD in laravel.<br>
-It provides several traits and classes to allow you to create Controllers that handle automaticaly pagination and 
-create JSON responses in a standard format. Also, it provides a set of traits to implement what we call Model driven 
-Repositories, which allows to have your Models act as data Repositories that can handle filtering, pagination, CRUD 
+It provides several traits and classes to allow you to create Controllers that handle automaticaly pagination and
+create JSON responses in a standard format. Also, it provides a set of traits to implement what we call Model driven
+Repositories, which allows to have your Models act as data Repositories that can handle filtering, pagination, CRUD
 operations as well as provide an easy way to create your own custom operations and validations.
 
 ## Requirements
+
 This package requires:
-- PHP __7.0__+
-- Laravel __5.1__+ or Lumen __5.1__+
+
+- PHP **7.2**+
+- Laravel **6**+ or Lumen **5.1**+
 
 ## Install
+
 `composer require asp-devteam/laravel-repository`
 
 ### Laravel
@@ -27,10 +30,12 @@ Append the following line to the `providers` key in `config/app.php` to register
 ASP\Repository\RepositoryServiceProvider::class,
 ```
 
-***
-_The package supports auto-discovery, so if you use Laravel 5.5 or later you may skip registering the service 
+---
+
+_The package supports auto-discovery, so if you use Laravel 5.5 or later you may skip registering the service
 provider and facades as they will be registered automatically._
-***
+
+---
 
 #### Publishing resources
 
@@ -42,6 +47,7 @@ php artisan vendor:publish --tag=repository.config
 ```
 
 ## Usage
+
 Write a few lines about the usage of this package.
 
 This documentation assumes some knowledge of how [Fractal](https://github.com/thephpleague/fractal) works.
@@ -59,8 +65,11 @@ class YourController extends Controller
 ```
 
 #### Using Model Repository
+
 ##### Option 1: Using the provided Repository
+
 To use the Repository you can use it in your model class:
+
 ```php
 use ASP\Repository\Traits\Repository;
 
@@ -69,15 +78,17 @@ class YourModel extends Model
     use Repository;
 }
 ```
+
 This will make available to you several methods:
 
-* `getAllRecords(Filter $filters = null, array $pagination = null)`
-* `getRecordById($id)`
-* `createRecord(Request $request)`
-* `updateRecordById($id, Request $request)`
-* `deleteRecordById($id, Request $request)`
+- `getAllRecords(Filter $filters = null, array $pagination = null)`
+- `getRecordById($id)`
+- `createRecord(Request $request)`
+- `updateRecordById($id, Request $request)`
+- `deleteRecordById($id, Request $request)`
 
 ##### Option 2: Creating your own Repository
+
 You can also extend the Repository and add your own methods, this also allows you to use Model Validators:
 
 ```php
@@ -86,8 +97,8 @@ use ASP\Repository\Traits\Repository;
 trait YourRepository
 {
     use Repository;
-  
-  	
+
+
 }
 ```
 
@@ -143,6 +154,7 @@ trait YourModelValidator
 ```
 
 #### Using Filters
+
 To filter your Model queries you can extend `ASP\Repository\Base\Filter`:
 
 ```php
@@ -154,10 +166,17 @@ class PetFilters extends Filter
 ```
 
 ## Contributing
+
 Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
 
 ## Security
+
 If you discover any security-related issues, please email asp-devteam@alter-solutions.com instead of using the issue tracker.
 
 ## License
+
 The MIT License (MIT). Please see [License File](/LICENSE.md) for more information.
+
+---
+
+Copyright 2019 Alter Solutions Portugal
