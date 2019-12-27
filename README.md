@@ -18,7 +18,17 @@ This package requires:
 
 ## Install
 
-`composer require asp-devteam/laravel-repository`
+The compatibility with Laravel is as following
+
+| **Laravel** | **laravel-repository** |
+| ----------- | ---------------------- |
+| 5.7         | ^0.1                   |
+| 5.8         | ^0.1                   |
+| 6.x         | ^6.0                   |
+
+To add dependency to a Laravel 6.x project, run
+
+`composer require asp-devteam/laravel-repository "^6.0"`
 
 ### Laravel
 
