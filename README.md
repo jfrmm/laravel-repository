@@ -189,4 +189,4 @@ The MIT License (MIT). Please see [License File](/LICENSE.md) for more informati
 
 ---
 
-Copyright 2019 Alter Solutions Portugal
+Copyright 2020 Alter Solutions Portugal
