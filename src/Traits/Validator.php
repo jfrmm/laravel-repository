@@ -2,8 +2,8 @@
 
 namespace ASP\Repository\Traits;
 
-use Illuminate\Http\Request;
 use ASP\Repository\Exceptions\ValidationException;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator as IlluminateValidator;
 
 /**

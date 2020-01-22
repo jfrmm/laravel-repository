@@ -2,20 +2,22 @@
 
 namespace ASP\Repository\Traits;
 
-use ReflectionClass;
-use ReflectionException;
-use ASP\Repository\Response;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Collection;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Builder;
+use ASP\Repository\Base\HttpStatusCode;
 use ASP\Repository\Base\Model as BaseModel;
-use Flugg\Responder\Transformers\Transformer;
-use ASP\Repository\Serializers\ErrorSerializer;
-use Illuminate\Pagination\LengthAwarePaginator;
 use ASP\Repository\Exceptions\RepositoryException;
+use ASP\Repository\Response;
+use ASP\Repository\Serializers\ErrorSerializer;
 use Flugg\Responder\Http\Responses\ErrorResponseBuilder;
 use Flugg\Responder\Http\Responses\SuccessResponseBuilder;
+use Flugg\Responder\Transformers\Transformer;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
+use ReflectionClass;
+use ReflectionException;
 use Symfony\Component\HttpFoundation\Response as HTTPResponse;
 
 /**
@@ -41,10 +43,10 @@ trait MakesResponses
     /**
      * Generate the response
      *
-     * @param Model|Builder|RepositoryException $data
-     * @param Transformer                       $transformer
-     * @param string                            $action
-     * @param BaseModel|Model|string            $model
+     * @param Model|Builder|RepositoryException|HttpStatusCode $data
+     * @param Transformer                                      $transformer
+     * @param string                                           $action
+     * @param BaseModel|Model|string                           $model
      *
      * @return JsonResponse
      *
@@ -54,6 +56,8 @@ trait MakesResponses
     {
         if ($data instanceof RepositoryException) {
             $this->prepareRepositoryExceptionResponse($data);
+        } elseif ($data instanceof HttpStatusCode) {
+            $this->prepareHTTPStatusResponse($data);
         } else {
             $this->prepareResponse($data, $transformer, $action, $model);
         }
@@ -136,13 +140,22 @@ trait MakesResponses
             case 'ValidationException':
                 $this->status = HTTPResponse::HTTP_UNPROCESSABLE_ENTITY;
                 $message = $exception->getMessage();
-                $data = $exception->getExceptionData();
+                $errors = $exception->getExceptionData();
+                $data = [];
+
+                foreach ($errors as $key => $value) {
+                    foreach (Arr::wrap($value) as $error) {
+                        $data[] = [$key => $error];
+                    }
+                }
                 break;
+
             case 'ReadException':
                 $this->status = HTTPResponse::HTTP_NOT_FOUND;
                 $message = $exception->getMessage();
                 $data = $exception->getExceptionData();
                 break;
+
             case 'IndexException':
             case 'CreateException':
             case 'UpdateException':
@@ -151,6 +164,7 @@ trait MakesResponses
                 $message = $exception->getMessage();
                 $data = $exception->getExceptionData();
                 break;
+
             default:
                 $this->status = HTTPResponse::HTTP_INTERNAL_SERVER_ERROR;
                 $message = $exception->getMessage();
@@ -158,6 +172,21 @@ trait MakesResponses
         }
 
         $this->error($message, $data);
+    }
+
+    /**
+     * Prepare a response with a specific HTTP status code
+     *
+     * @param HttpStatusCode $httpStatusCode
+     *
+     * @return void
+     */
+    private function prepareHTTPStatusResponse(HttpStatusCode $httpStatusCode)
+    {
+        $this->status = $httpStatusCode->status;
+        $this->data = null;
+
+        $this->error($httpStatusCode->message);
     }
 
     /**
@@ -186,7 +215,7 @@ trait MakesResponses
     {
         $meta = ['pagination' => $paginationData];
 
-        if (! is_null($message)) {
+        if (!is_null($message)) {
             $meta['message'] = $message;
         }
 
@@ -232,9 +261,14 @@ trait MakesResponses
             }
         }
 
-        $this->response = $this->makesResponsesError($this->status, $message)
-                            ->data($errors)
-                            ->serializer(ErrorSerializer::class);
+        if (is_null($errors)) {
+            $this->response = $this->makesResponsesError($this->status, $message)
+                ->serializer(ErrorSerializer::class);
+        } else {
+            $this->response = $this->makesResponsesError($this->status, $message)
+                ->data($errors)
+                ->serializer(ErrorSerializer::class);
+        }
 
         return $this;
     }

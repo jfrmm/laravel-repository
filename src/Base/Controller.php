@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 
 /**
+ * Class Controller
+ *
  * @package ASP\Repository\Base
  */
 class Controller extends BaseController

@@ -28,7 +28,7 @@ class ErrorSerializer extends FluggErrorSerializer
             Response::MESSAGE => $message,
         ];
 
-        if (! is_null($data)) {
+        if (!is_null($data)) {
             if (isset($data[Response::DISMISSIBLE])) {
                 $response[Response::DISMISSIBLE] = $data[Response::DISMISSIBLE];
                 unset($data[Response::DISMISSIBLE]);

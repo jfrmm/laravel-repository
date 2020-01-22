@@ -2,11 +2,13 @@
 
 namespace ASP\Repository\Base;
 
-use Illuminate\Support\Str;
-use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 /**
+ * Abstract Class Filter
+ *
  * Based on Jeffrey Way's Laracast's dedicated Query String Filtering,
  * aims at being a simple way to create dedicated filters per model.
  *
@@ -78,7 +80,7 @@ abstract class Filter
         $this->builder = $builder;
 
         foreach ($this->filters() as $name => $value) {
-            if (! is_array($value)) {
+            if (!is_array($value)) {
                 if ($this->hasSorts($name, $value)) {
                     $this->setSorts($name, $value);
                     continue;
@@ -95,7 +97,7 @@ abstract class Filter
 
             $name = Str::camel($name);
 
-            if (! method_exists($this, $name)) {
+            if (!method_exists($this, $name)) {
                 continue;
             }
 
@@ -127,7 +129,7 @@ abstract class Filter
      */
     private function hasSorts(string $sort, ?string $column = null): bool
     {
-        if (! is_null($column) && $sort === 'sort_by') {
+        if (!is_null($column) && $sort === 'sort_by') {
             return true;
         }
 

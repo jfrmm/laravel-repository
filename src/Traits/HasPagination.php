@@ -35,7 +35,7 @@ trait HasPagination
     public function createPagination(Request $request)
     {
         foreach ($request->only(['page', 'size']) as $name => $value) {
-            if (! $name) {
+            if (!$name) {
                 continue;
             }
             $name = Str::camel($name);

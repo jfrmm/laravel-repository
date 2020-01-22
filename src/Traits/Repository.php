@@ -3,16 +3,16 @@
 namespace ASP\Repository\Traits;
 
 use ASP\Repository\Base\Filter;
-use Illuminate\Http\Request;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Builder;
-use ASP\Repository\Exceptions\ReadException;
-use Illuminate\Database\Eloquent\Collection;
-use ASP\Repository\Exceptions\IndexException;
 use ASP\Repository\Exceptions\CreateException;
 use ASP\Repository\Exceptions\DeleteException;
+use ASP\Repository\Exceptions\IndexException;
+use ASP\Repository\Exceptions\ReadException;
 use ASP\Repository\Exceptions\UpdateException;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
 
 /**
  * @package ASP\Repository\Traits
@@ -47,12 +47,12 @@ trait Repository
         try {
             $builder = self::query();
 
-            if (! is_null($filters)) {
+            if (!is_null($filters)) {
                 $builder = $builder->filter($filters);
             }
 
-            if (! is_null($pagination)) {
-                $size = array_key_exists('size', $pagination) ? $pagination['size']: 10;
+            if (!is_null($pagination)) {
+                $size = array_key_exists('size', $pagination) ? $pagination['size'] : 10;
 
                 return $builder->paginate(
                     $size,

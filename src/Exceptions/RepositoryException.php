@@ -2,13 +2,13 @@
 
 namespace ASP\Repository\Exceptions;
 
-use Exception;
-use ReflectionClass;
-use ReflectionException;
 use ASP\Repository\Base\Model;
+use ASP\Repository\Traits\MakesResponses;
+use Exception;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
-use ASP\Repository\Traits\MakesResponses;
+use ReflectionClass;
+use ReflectionException;
 use Symfony\Component\HttpFoundation\Response as HTTPResponse;
 
 /**
@@ -85,12 +85,10 @@ class RepositoryException extends Exception
         $this->data = $data ?? $this->setExceptionData();
         $this->dismissible = $dismissible;
 
-        if (! $this->model) {
+        if (!$this->model) {
             $modelName = $model instanceof Model ? $model->getModelName() : 'Model';
             $this->message = $message ?? __($this->crud, ['entity' => $modelName]);
         }
-
-        $this->report();
     }
 
     /**
@@ -101,12 +99,12 @@ class RepositoryException extends Exception
     private function setExceptionData()
     {
         $data = [
-            'exception' =>  $this->classShortName,
+            'exception' => $this->classShortName,
             'file' => $this->getFile(),
             'line' => $this->getLine(),
         ];
 
-        if (! App::environment('prod')) {
+        if (!App::environment('prod')) {
             $data['trace'] = $this->getTraceAsString();
         }
 
@@ -121,6 +119,16 @@ class RepositoryException extends Exception
     public function getExceptionData()
     {
         return $this->data;
+    }
+
+    /**
+     * Report the exception to the log
+     *
+     * @return void
+     */
+    public function report()
+    {
+        $this->logException();
     }
 
     /**
@@ -139,16 +147,8 @@ class RepositoryException extends Exception
                 Log::error($this->message);
                 Log::error(print_r($this->getExceptionData(), true));
                 break;
+            default:
+                Log::error($this->message);
         }
-    }
-
-    /**
-     * Report the exception to the log
-     *
-     * @return void
-     */
-    public function report()
-    {
-        $this->logException();
     }
 }
