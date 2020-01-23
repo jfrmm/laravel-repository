@@ -142,7 +142,6 @@ trait MakesResponses
                 $message = $exception->getMessage();
                 $errors = $exception->getExceptionData();
                 $data = [];
-
                 foreach ($errors as $key => $value) {
                     foreach (Arr::wrap($value) as $error) {
                         $data[] = [$key => $error];
@@ -261,6 +260,10 @@ trait MakesResponses
             }
         }
 
+        /**
+         * $errors contains validation errors, which we'll output
+         * in a more convenient format
+         */
         if (is_null($errors)) {
             $this->response = $this->makesResponsesError($this->status, $message)
                 ->serializer(ErrorSerializer::class);
