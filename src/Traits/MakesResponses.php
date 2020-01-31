@@ -2,20 +2,20 @@
 
 namespace ASP\Repository\Traits;
 
-use ReflectionClass;
-use ReflectionException;
-use ASP\Repository\Response;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Collection;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Builder;
 use ASP\Repository\Base\Model as BaseModel;
-use Flugg\Responder\Transformers\Transformer;
-use ASP\Repository\Serializers\ErrorSerializer;
-use Illuminate\Pagination\LengthAwarePaginator;
 use ASP\Repository\Exceptions\RepositoryException;
+use ASP\Repository\Response;
+use ASP\Repository\Serializers\ErrorSerializer;
 use Flugg\Responder\Http\Responses\ErrorResponseBuilder;
 use Flugg\Responder\Http\Responses\SuccessResponseBuilder;
+use Flugg\Responder\Transformers\Transformer;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
+use ReflectionClass;
+use ReflectionException;
 use Symfony\Component\HttpFoundation\Response as HTTPResponse;
 
 /**
@@ -169,7 +169,9 @@ trait MakesResponses
      */
     private function withMessage(?string $message = null)
     {
-        $this->response = $this->response->meta(['message' => $message]);
+        if (!is_null($message)) {
+            $this->response = $this->response->meta(['message' => $message]);
+        }
 
         return $this;
     }
