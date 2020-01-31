@@ -197,7 +197,9 @@ trait MakesResponses
      */
     private function withMessage(?string $message = null)
     {
-        $this->response = $this->response->meta(['message' => $message]);
+        if (!is_null($message)) {
+            $this->response = $this->response->meta(['message' => $message]);
+        }
 
         return $this;
     }
