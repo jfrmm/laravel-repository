@@ -120,6 +120,8 @@ trait MakesResponses
             $metadata = $this->getPaginationProperties($data);
             $this->success($data->items(), $transformer);
             $this->withPagination($metadata, $message);
+        } elseif (is_array($data)) {
+            $this->success($data);
         }
     }
 
