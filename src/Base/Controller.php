@@ -6,6 +6,7 @@ use ASP\Repository\Traits\HasPagination;
 use ASP\Repository\Traits\MakesResponses;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
+use Symfony\Component\HttpFoundation\Response as HTTPResponse;
 
 /**
  * Class Controller
@@ -22,6 +23,11 @@ class Controller extends BaseController
     public $request;
 
     /**
+     * @var HTTPResponse
+     */
+    public $httpResponses;
+
+    /**
      * @return Illuminate\Http\Request|void
      */
     public function __construct()
@@ -31,5 +37,7 @@ class Controller extends BaseController
             $this->createPagination($request);
             return $next($request);
         })->only('index');
+
+        $this->httpResponses = new HTTPResponse();
     }
 }

@@ -66,6 +66,32 @@ trait MakesResponses
     }
 
     /**
+     * Generate the response, but with fewer options
+     *
+     * @param int        $status
+     * @param string     $message
+     * @param array|null $data
+     *
+     * @return JsonResponse
+     */
+    public function simplyRespond($status, $message = '', $data = null)
+    {
+        if (is_null($status)) {
+            $status = 200;
+        }
+
+        $this->status = $status;
+
+        if ($this->status < 400) {
+            $this->prepareSimpleSuccessResponse($message, $data);
+        } else {
+            $this->prepareSimpleErrorResponse($message);
+        }
+
+        return $this->response->respond($this->status);
+    }
+
+    /**
      * Prepare a response
      *
      * @param Model|Collection|RepositoryException|LengthAwarePaginator $data
@@ -120,7 +146,7 @@ trait MakesResponses
             $metadata = $this->getPaginationProperties($data);
             $this->success($data->items(), $transformer);
             $this->withPagination($metadata, $message);
-        } elseif (is_array($data)) {
+        } else {
             $this->success($data);
         }
     }
@@ -191,6 +217,34 @@ trait MakesResponses
     }
 
     /**
+     * Prepare a simple success response, with data and a message
+     *
+     * @param string $message
+     * @param array  $data
+     *
+     * @return void
+     */
+    private function prepareSimpleSuccessResponse($message, $data)
+    {
+        $this->success($data);
+        $this->withMessage($message);
+    }
+
+
+    /**
+     * Prepare a simple error response, with a message
+     *
+     * @param string $message
+     *
+     * @return void
+     */
+    private function prepareSimpleErrorResponse($message)
+    {
+        $this->data = null;
+        $this->error($message);
+    }
+
+    /**
      * Specify the message
      *
      * @param string|null $message
@@ -199,7 +253,7 @@ trait MakesResponses
      */
     private function withMessage(?string $message = null)
     {
-        if (!is_null($message)) {
+        if (!is_null($message) && $message !== '') {
             $this->response = $this->response->meta(['message' => $message]);
         }
 
