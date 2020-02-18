@@ -8,6 +8,7 @@ use ASP\Repository\Exceptions\DeleteException;
 use ASP\Repository\Exceptions\IndexException;
 use ASP\Repository\Exceptions\ReadException;
 use ASP\Repository\Exceptions\UpdateException;
+use ASP\Repository\Exceptions\ValidationException;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -78,7 +79,7 @@ trait Repository
      *
      * @return Model|null
      *
-     * @throws CreateException
+     * @throws ValidationException|CreateException
      */
     final protected static function createRecord(Request $request)
     {
@@ -86,10 +87,12 @@ trait Repository
             $validation = self::validateCreate($request);
 
             if ($validation !== true) {
-                return $validation;
+                throw $validation;
             }
 
             return self::commitCreateRecord($request);
+        } catch (ValidationException $exception) {
+            throw $exception;
         } catch (\Exception $exception) {
             return new CreateException(null, null, $exception->getMessage());
         }
@@ -103,7 +106,7 @@ trait Repository
      *
      * @return Model|null
      *
-     * @throws UpdateException
+     * @throws ValidationException|UpdateException
      */
     final protected static function updateRecordById($id, Request $request)
     {
@@ -111,10 +114,12 @@ trait Repository
             $validation = self::validateUpdate($request);
 
             if ($validation !== true) {
-                return $validation;
+                throw $validation;
             }
 
             return self::commitUpdateRecordById($id, $request);
+        } catch (ValidationException $exception) {
+            throw $exception;
         } catch (\Exception $exception) {
             return new UpdateException(null, null, $exception->getMessage());
         }
@@ -128,7 +133,7 @@ trait Repository
      *
      * @return bool|null
      *
-     * @throws DeleteException
+     * @throws ValidationException|DeleteException
      */
     final protected static function deleteRecordById($id, Request $request)
     {
@@ -136,10 +141,12 @@ trait Repository
             $validation = self::validateDelete($request);
 
             if ($validation !== true) {
-                return $validation;
+                throw $validation;
             }
 
             return self::commitDeleteRecordById($id, $request);
+        } catch (ValidationException $exception) {
+            throw $exception;
         } catch (\Exception $exception) {
             return new DeleteException(null, null, $exception->getMessage());
         }
