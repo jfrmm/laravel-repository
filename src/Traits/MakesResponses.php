@@ -68,13 +68,13 @@ trait MakesResponses
     /**
      * Generate the response, but with fewer options
      *
-     * @param int        $status
-     * @param string     $message
-     * @param array|null $data
+     * @param int           $status
+     * @param string|null   $message
+     * @param array|null    $data
      *
      * @return JsonResponse
      */
-    public function simplyRespond($status, $message = '', $data = null)
+    public function simplyRespond($status, string $message = null, array $data = null)
     {
         if (is_null($status)) {
             $status = 200;
@@ -224,7 +224,7 @@ trait MakesResponses
      *
      * @return void
      */
-    private function prepareSimpleSuccessResponse($message, $data)
+    private function prepareSimpleSuccessResponse($message, array $data)
     {
         $this->success($data);
         $this->withMessage($message);
