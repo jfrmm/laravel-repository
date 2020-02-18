@@ -40,31 +40,14 @@ trait Repository
      * @param array|null    $pagination
      * @param Filter|null   $filters
      *
-     * @return Collection|Model|LengthAwarePaginator|IndexException
+     * @return Collection|Model|LengthAwarePaginator
+     *
+     * @throws IndexException
      */
-    protected static function getAllRecords(?array $pagination = null, ?Filter $filters = null)
+    final protected static function getAllRecords(?array $pagination = null, ?Filter $filters = null)
     {
         try {
-            $builder = self::query();
-
-            if (!is_null($filters)) {
-                $builder = $builder->filter($filters);
-            }
-
-            if (!is_null($pagination)) {
-                $size = array_key_exists('size', $pagination) ? $pagination['size'] : 10;
-
-                return $builder->paginate(
-                    $size,
-                    ['*'],
-                    'page',
-                    $pagination['page']
-                );
-            }
-
-            $table = with($builder->getModel())->getTable();
-
-            return $builder->distinct()->get(["{$table}.*"]);
+            return self::commitGetAllRecords($pagination, $filters);
         } catch (\Exception $exception) {
             return new IndexException(null, null, $exception->getMessage());
         }
@@ -75,12 +58,14 @@ trait Repository
      *
      * @param mixed $id
      *
-     * @return Model|Collection|Builder|ReadException
+     * @return Model|Collection|Builder
+     *
+     * @throws ReadException
      */
-    protected static function getRecordById($id)
+    final protected static function getRecordById($id)
     {
         try {
-            return self::findOrFail($id);
+            return self::commitGetRecordById($id);
         } catch (\Exception $exception) {
             return new ReadException(null, null, $exception->getMessage());
         }
@@ -91,7 +76,9 @@ trait Repository
      *
      * @param Request $request
      *
-     * @return Model|CreateException|null
+     * @return Model|null
+     *
+     * @throws CreateException
      */
     final protected static function createRecord(Request $request)
     {
@@ -109,29 +96,16 @@ trait Repository
     }
 
     /**
-     * Commit to create a new record in the database.
-     * Override this method when you need to add business logic.
-     *
-     * @param Request $request
-     *
-     * @return Model|null
-     *
-     * @throws \Exception
-     */
-    private static function commitCreateRecord(Request $request)
-    {
-        return self::create($request->all())->fresh();
-    }
-
-    /**
      * Update the specified record in the database.
      *
      * @param mixed   $id
      * @param Request $request
      *
-     * @return Model|UpdateException|null
+     * @return Model|null
+     *
+     * @throws UpdateException
      */
-    protected static function updateRecordById($id, Request $request)
+    final protected static function updateRecordById($id, Request $request)
     {
         try {
             $validation = self::validateUpdate($request);
@@ -144,6 +118,95 @@ trait Repository
         } catch (\Exception $exception) {
             return new UpdateException(null, null, $exception->getMessage());
         }
+    }
+
+    /**
+     * Delete the specified record from the database.
+     *
+     * @param mixed   $id
+     * @param Request $request
+     *
+     * @return bool|null
+     *
+     * @throws DeleteException
+     */
+    final protected static function deleteRecordById($id, Request $request)
+    {
+        try {
+            $validation = self::validateDelete($request);
+
+            if ($validation !== true) {
+                return $validation;
+            }
+
+            return self::commitDeleteRecordById($id, $request);
+        } catch (\Exception $exception) {
+            return new DeleteException(null, null, $exception->getMessage());
+        }
+    }
+
+    /**
+     * Commit to get all records in the database.
+     * Optionally may be paginated and filtered.
+     * Override this method when you need to add business logic.
+     *
+     * @param array  $pagination
+     * @param Filter $filters
+     *
+     * @return Collection|Model|LengthAwarePaginator
+     */
+    private static function commitGetAllRecords(array $pagination = null, Filter $filters = null)
+    {
+        $builder = self::query();
+
+        if (!is_null($filters)) {
+            $builder = $builder->filter($filters);
+        }
+
+        if (!is_null($pagination)) {
+            $size = array_key_exists('size', $pagination) ? $pagination['size'] : 10;
+
+            return $builder->paginate(
+                $size,
+                ['*'],
+                'page',
+                $pagination['page']
+            );
+        }
+
+        $table = with($builder->getModel())->getTable();
+
+        return $builder->distinct()->get(["{$table}.*"]);
+    }
+
+    /**
+     * Commit to get a record in the database.
+     * Override this method when you need to add business logic.
+     *
+     * @param mixed $id
+     *
+     * @return Model
+     *
+     * @throws \Exception
+     */
+    private function commitGetRecordById($id)
+    {
+        return self::findOrFail($id);
+    }
+
+    /**
+     * Commit to create a new record in the database.
+     * Override this method when you need to add business logic.
+     *
+     * @param Request $request
+     *
+     * @return Model|null
+     *
+     * @throws \Exception
+     */
+    private static function commitCreateRecord(Request $request)
+    {
+        return self::create($request->all())->fresh();
     }
 
     /**
@@ -168,29 +231,6 @@ trait Repository
         $record->update($request->all());
 
         return $record->fresh();
-    }
-
-    /**
-     * Delete the specified record from the database.
-     *
-     * @param mixed   $id
-     * @param Request $request
-     *
-     * @return bool|DeleteException|null
-     */
-    protected static function deleteRecordById($id, Request $request)
-    {
-        try {
-            $validation = self::validateDelete($request);
-
-            if ($validation !== true) {
-                return $validation;
-            }
-
-            return self::commitDeleteRecordById($id, $request);
-        } catch (\Exception $exception) {
-            return new DeleteException(null, null, $exception->getMessage());
-        }
     }
 
     /**
