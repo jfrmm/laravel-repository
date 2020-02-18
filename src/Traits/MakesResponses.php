@@ -74,7 +74,7 @@ trait MakesResponses
      *
      * @return JsonResponse
      */
-    public function simplyRespond($status, string $message = null, array $data = null)
+    public function simplyRespond($status, ?string $message = null, ?array $data = null)
     {
         if (is_null($status)) {
             $status = 200;
@@ -229,7 +229,6 @@ trait MakesResponses
         $this->success($data);
         $this->withMessage($message);
     }
-
 
     /**
      * Prepare a simple error response, with a message

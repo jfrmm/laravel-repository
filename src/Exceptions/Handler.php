@@ -3,7 +3,6 @@
 namespace ASP\Repository\Exceptions;
 
 use ASP\Repository\Base\HttpStatusCode;
-use ASP\Repository\Exceptions\RepositoryException;
 use Exception;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
@@ -17,9 +16,7 @@ class Handler extends ExceptionHandler
      *
      * @var array
      */
-    protected $dontReport = [
-        //
-    ];
+    protected $dontReport = [];
 
     /**
      * A list of the inputs that are never flashed for validation exceptions.
