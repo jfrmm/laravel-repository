@@ -196,7 +196,7 @@ trait Repository
      *
      * @throws \Exception
      */
-    private function commitGetRecordById($id)
+    private static function commitGetRecordById($id)
     {
         return self::findOrFail($id);
     }
