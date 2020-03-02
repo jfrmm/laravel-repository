@@ -220,11 +220,11 @@ trait MakesResponses
      * Prepare a simple success response, with data and a message
      *
      * @param string $message
-     * @param array  $data
+     * @param array|null $data
      *
      * @return void
      */
-    private function prepareSimpleSuccessResponse($message, array $data)
+    private function prepareSimpleSuccessResponse($message, ?array $data = null)
     {
         $this->success($data);
         $this->withMessage($message);
