@@ -16,7 +16,9 @@ return [
         'template' => 'Got :Entity template location',
         'import' => 'Got :Entity file imported. Imported :count records',
 
-        //Exports
+        /**
+         * Exports
+         */
         'export' => 'Successfully exported :Entity list',
         'review_report' => ':Entity Report generated with success',
     ],

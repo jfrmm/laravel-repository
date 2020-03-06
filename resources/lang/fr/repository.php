@@ -16,7 +16,9 @@ return [
         'template' => 'Eu :Entity emplacement du modèle.',
         'import' => 'Fichier de :Entity importé,  Importé :count valeurs.',
 
-        //Exports
+        /**
+         * Exports
+         */
         'export' => 'Liste des :Entity exportée avec succès',
         'review_report' => ':Entity Report generated with success.',
     ],
