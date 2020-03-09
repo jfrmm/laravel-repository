@@ -14,7 +14,7 @@ return [
         'email_sent' => 'Email envoyé',
 
         'template' => 'Eu :Entity emplacement du modèle.',
-        'import' => 'Fichier de :Entity importé,  Importé :count valeurs.',
+        'import' => 'Fichier de :Entity importé. Importé :count valeurs.',
 
         /**
          * Exports
@@ -30,7 +30,7 @@ return [
         'update' => 'Erreur suppression :Entity',
         'delete' => 'Erreur mise à jour :Entity',
         'enable' => 'Erreur activation :Entity',
-        'disable' => 'Erreur Désactivation :Entity',
+        'disable' => 'Erreur désactivation :Entity',
 
         'forbidden' => 'L\'utilisateur ne peut pas exécuter cette action',
 
@@ -38,6 +38,6 @@ return [
         'not_found' => ':Entity non trouvée',
         'is_disabled' => 'Associé :Entity est désactivée.',
 
-        'validation_failed' => 'Validation Échouée',
+        'validation_failed' => 'Validation échouée',
     ],
 ];

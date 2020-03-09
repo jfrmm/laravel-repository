@@ -38,6 +38,6 @@ return [
         'not_found' => ':Entity not found',
         'is_disable' => 'Associated :Entity is disabled',
 
-        'validation_failed' => 'Validation Failed',
+        'validation_failed' => 'Validation failed',
     ],
 ];
