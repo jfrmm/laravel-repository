@@ -4,6 +4,7 @@ namespace ASP\Repository\Base;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
 
 /**
@@ -31,6 +32,14 @@ abstract class Filter
      * @var Request
      */
     private $request;
+
+    /**
+     * The current route.
+     *
+     * @var Route
+     */
+    private $route;
+
 
     /**
      * The builder instance.
@@ -66,6 +75,7 @@ abstract class Filter
     public function __construct(Request $request)
     {
         $this->request = $request;
+        $this->route = Route::getCurrentRoute();
     }
 
     /**
@@ -95,18 +105,41 @@ abstract class Filter
                 }
             }
 
-            $name = Str::camel($name);
-
-            if (!method_exists($this, $name)) {
+            if (!$this->callFilter($name, $value)) {
                 continue;
             }
+        }
 
-            $this->$name($value);
+        foreach ($this->route->parameters as $name => $value) {
+            if (!$this->callFilter($name, $value)) {
+                continue;
+            }
         }
 
         $this->applySorts();
 
         return $this->builder;
+    }
+
+    /**
+     * Call the object's filter method
+     *
+     * @param string $name
+     * @param string $value
+     *
+     * @return void
+     */
+    private function callFilter(string $name, string $value)
+    {
+        $name = Str::camel($name);
+
+        if (!method_exists($this, $name)) {
+            return false;
+        }
+
+        $this->$name($value);
+
+        return true;
     }
 
     /**
