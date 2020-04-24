@@ -9,6 +9,9 @@ use NunoMaduro\PhpInsights\Domain\Insights\ForbiddenPrivateMethods;
 use NunoMaduro\PhpInsights\Domain\Insights\ForbiddenTraits;
 use NunoMaduro\PhpInsights\Domain\Metrics\Architecture\Classes;
 use PHP_CodeSniffer\Standards\Generic\Sniffs\Files\LineLengthSniff;
+use PHP_CodeSniffer\Standards\Generic\Sniffs\Formatting\SpaceAfterNotSniff;
+use PhpCsFixer\Fixer\ClassNotation\OrderedClassElementsFixer;
+use SlevomatCodingStandard\Sniffs\Functions\StaticClosureSniff;
 use SlevomatCodingStandard\Sniffs\Namespaces\AlphabeticallySortedUsesSniff;
 use SlevomatCodingStandard\Sniffs\TypeHints\DeclareStrictTypesSniff;
 use SlevomatCodingStandard\Sniffs\TypeHints\DisallowMixedTypeHintSniff;
@@ -60,6 +63,11 @@ return [
         ForbiddenNormalClasses::class,
         ForbiddenTraits::class,
         TypeHintDeclarationSniff::class,
+
+        // Adjust defaults for Laravel Repository
+        StaticClosureSniff::class,
+        SpaceAfterNotSniff::class,
+        OrderedClassElementsFixer::class,
     ],
 
     'config' => [
