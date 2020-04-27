@@ -124,12 +124,12 @@ abstract class Filter
     /**
      * Call the object's filter method
      *
-     * @param string $name
-     * @param string $value
+     * @param string       $name
+     * @param string|array $value
      *
      * @return void
      */
-    private function callFilter(string $name, string $value)
+    private function callFilter(string $name, $value)
     {
         $name = Str::camel($name);
 
