@@ -111,7 +111,7 @@ abstract class Filter
         }
 
         foreach ($this->route->parameters as $name => $value) {
-            if (!$this->callFilter($name, $value)) {
+            if (!$this->callFilter($name, [$value])) {
                 continue;
             }
         }
