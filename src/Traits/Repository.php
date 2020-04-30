@@ -30,7 +30,7 @@ trait Repository
      *
      * @return Builder
      */
-    public function scopeFilter(Builder $query, Filter $filters)
+    public function scopeFilter(Builder $query, Filter $filters): Builder
     {
         return $filters->apply($query);
     }
@@ -213,7 +213,7 @@ trait Repository
      */
     private static function commitCreateRecord(Request $request)
     {
-        return self::create($request->all())->fresh();
+        return self::create(self::reduceRequestArrays($request))->fresh();
     }
 
     /**
@@ -235,7 +235,7 @@ trait Repository
             throw new \Exception($record->getMessage());
         }
 
-        $record->update($request->all());
+        $record->update(self::reduceRequestArrays($request));
 
         return $record->fresh();
     }
@@ -267,5 +267,28 @@ trait Repository
                 $record->delete();
             }
         );
+    }
+
+    /**
+     * Reduce the arrays of a request to a key
+     * appended with "_id" and the array's ID
+     *
+     * @param Request $request
+     *
+     * @return array
+     */
+    private static function reduceRequestArrays(Request $request): array
+    {
+        $data = [];
+
+        foreach ($request->all() as $key => $value) {
+            if (is_array($value)) {
+                $data["{$key}_id"] = $value['id'];
+            } else {
+                $data[$key] = $value;
+            }
+        }
+
+        return $data;
     }
 }
