@@ -85,7 +85,7 @@ abstract class Filter
      *
      * @return Builder
      */
-    public function apply(Builder $builder)
+    public function apply(Builder $builder): Builder
     {
         $this->builder = $builder;
 
@@ -127,9 +127,9 @@ abstract class Filter
      * @param string       $name
      * @param string|array $value
      *
-     * @return void
+     * @return boolean
      */
-    private function callFilter(string $name, $value)
+    private function callFilter(string $name, $value): bool
     {
         $name = Str::camel($name);
 
@@ -147,7 +147,7 @@ abstract class Filter
      *
      * @return array
      */
-    public function filters()
+    public function filters(): array
     {
         return $this->request->except(['page', 'size', 'with']);
     }
@@ -158,7 +158,7 @@ abstract class Filter
      * @param string $sort
      * @param string|null $column
      *
-     * @return bool
+     * @return boolean
      */
     private function hasSorts(string $sort, ?string $column = null): bool
     {
@@ -177,7 +177,7 @@ abstract class Filter
      *
      * @return void
      */
-    private function setSorts(string $sort, ?string $column = null)
+    private function setSorts(string $sort, ?string $column = null): void
     {
         foreach (explode(',', $column) as $sort) {
             if (preg_match('/.asc$/', $sort)) {
@@ -195,7 +195,7 @@ abstract class Filter
      *
      * @return void
      */
-    private function updateSortAsc(string $column)
+    private function updateSortAsc(string $column): void
     {
         $table = with($this->builder->getModel())->getTable();
 
@@ -211,7 +211,7 @@ abstract class Filter
      *
      * @return void
      */
-    private function updateSortDesc(string $column)
+    private function updateSortDesc(string $column): void
     {
         $table = with($this->builder->getModel())->getTable();
 
@@ -223,7 +223,7 @@ abstract class Filter
     /**
      * Apply the sorts to the Builder
      *
-     * @return Builder
+     * @return void|Builder
      */
     private function applySorts()
     {
@@ -263,8 +263,10 @@ abstract class Filter
 
     /**
      * Reset the list of currently joined entities
+     *
+     * @return void
      */
-    public function resetFilterJoins()
+    public function resetFilterJoins(): void
     {
         $this->joined = [];
     }
