@@ -40,7 +40,6 @@ abstract class Filter
      */
     private $route;
 
-
     /**
      * The builder instance.
      *
@@ -69,9 +68,6 @@ abstract class Filter
      */
     protected $joined = [];
 
-    /**
-     * @param Request $request
-     */
     public function __construct(Request $request)
     {
         $this->request = $request;
@@ -127,7 +123,7 @@ abstract class Filter
      * @param string       $name
      * @param string|array $value
      *
-     * @return boolean
+     * @return bool
      */
     private function callFilter(string $name, $value): bool
     {
@@ -158,7 +154,7 @@ abstract class Filter
      * @param string $sort
      * @param string|null $column
      *
-     * @return boolean
+     * @return bool
      */
     private function hasSorts(string $sort, ?string $column = null): bool
     {
