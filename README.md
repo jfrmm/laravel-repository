@@ -14,7 +14,7 @@ operations as well as provide an easy way to create your own custom operations a
 This package requires:
 
 - PHP **7.2**+
-- Laravel **6**+ or Lumen **5.1**+
+- Laravel **7**+ or Lumen **7**+
 
 ## Install
 
@@ -25,10 +25,11 @@ The compatibility with Laravel is as following
 | 5.7         | ^0.1                   |
 | 5.8         | ^0.1                   |
 | 6.x         | ^6.0                   |
+| 7.x         | ^7.0                   |
 
-To add dependency to a Laravel 6.x project, run
+To add dependency to a Laravel 7.x project, run
 
-`composer require asp-devteam/laravel-repository "^6.0"`
+`composer require asp-devteam/laravel-repository "^7.0"`
 
 ### Laravel
 
