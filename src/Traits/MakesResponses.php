@@ -12,12 +12,10 @@ use Flugg\Responder\Http\Responses\SuccessResponseBuilder;
 use Flugg\Responder\Transformers\Transformer;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use ReflectionClass;
-use ReflectionException;
 use Symfony\Component\HttpFoundation\Response as HTTPResponse;
 
 /**
@@ -48,9 +46,9 @@ trait MakesResponses
      * @param string                                           $action
      * @param BaseModel|Model|string                           $model
      *
-     * @return JsonResponse
+     * @return \Illuminate\Http\JsonResponse
      *
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function respond($data, $transformer = null, $action = null, $model = null)
     {
@@ -72,7 +70,7 @@ trait MakesResponses
      * @param string|null   $message
      * @param array|null    $data
      *
-     * @return JsonResponse
+     * @return \Illuminate\Http\JsonResponse
      */
     public function simplyRespond($status, ?string $message = null, ?array $data = null)
     {
@@ -101,7 +99,7 @@ trait MakesResponses
      *
      * @return void
      *
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     private function prepareResponse($data, $transformer, $action, $model)
     {
@@ -158,7 +156,7 @@ trait MakesResponses
      *
      * @return void
      *
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     private function prepareRepositoryExceptionResponse(RepositoryException $exception)
     {
@@ -219,7 +217,7 @@ trait MakesResponses
     /**
      * Prepare a simple success response, with data and a message
      *
-     * @param string $message
+     * @param string     $message
      * @param array|null $data
      *
      * @return void
