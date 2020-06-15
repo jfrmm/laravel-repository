@@ -282,7 +282,7 @@ trait Repository
         $data = [];
 
         foreach ($request->all() as $key => $value) {
-            if (is_array($value)) {
+            if (is_array($value) && array_key_exists('id', $value)) {
                 $data["{$key}_id"] = $value['id'];
             } else {
                 $data[$key] = $value;
