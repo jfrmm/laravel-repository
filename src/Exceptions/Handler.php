@@ -57,7 +57,7 @@ class Handler extends ExceptionHandler
      *
      * @throws \Exception
      */
-    public function report(Throwable $exception)
+    public function report(Exception $exception)
     {
         /**
          * Reports reserved for production
@@ -84,9 +84,9 @@ class Handler extends ExceptionHandler
      *
      * @return \Symfony\Component\HttpFoundation\Response
      *
-     * @throws \Throwable
+     * @throws \Exception
      */
-    public function render($request, Throwable $exception)
+    public function render($request, Exception $exception)
     {
         /**
          *  Handle HTTP response 401 Unauthorized
