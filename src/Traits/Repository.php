@@ -55,6 +55,24 @@ trait Repository
     }
 
     /**
+     * Return all the distinct records in the database for a column.
+     *
+     * @param string $columnsWithSort
+     *
+     * @return IndexException
+     *
+     * @throws \ReflectionException
+     */
+    final protected static function getAllRecordsDistinctForColumn(string $columnsWithSort)
+    {
+        try {
+            return self::commitGetAllRecordsDistinctForColumn($columnsWithSort);
+        } catch (\Exception $exception) {
+            return new IndexException(null, null, $exception->getMessage());
+        }
+    }
+
+    /**
      * Get the specified record from the database.
      *
      * @param mixed $id
@@ -184,6 +202,31 @@ trait Repository
         $table = with($builder->getModel())->getTable();
 
         return $builder->distinct()->get(["{$table}.*"]);
+    }
+
+    /**
+     * Commit to get all distinct records in the database for a column.
+     *
+     * @param string $columnsWithSort
+     *
+     * @return array
+     */
+    private static function commitGetAllRecordsDistinctForColumn(string $columnsWithSort)
+    {
+        $columnsDistinct = [];
+        foreach (explode(',', $columnsWithSort) as $columnWithSort) {
+            $columnWithSort = explode('.', $columnWithSort);
+            $sort = end($columnWithSort);
+            $column = reset($columnWithSort);
+
+            $columnsDistinct[$column] = self::query()
+                ->select($column)
+                ->distinct()
+                ->orderBy($column, $sort)
+                ->pluck($column);
+        }
+
+        return $columnsDistinct;
     }
 
     /**
