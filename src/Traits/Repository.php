@@ -48,25 +48,11 @@ trait Repository
     final protected static function getAllRecords(?array $pagination = null, ?Filter $filters = null)
     {
         try {
-            return self::commitGetAllRecords($pagination, $filters);
-        } catch (\Exception $exception) {
-            return new IndexException(null, null, $exception->getMessage());
-        }
-    }
+            if (isset($filters->filters()['columns_distinct'])) {
+                return self::commitGetAllRecordsDistinctForColumn($filters->filters()['columns_distinct']);
+            }
 
-    /**
-     * Return all the distinct records in the database for a column.
-     *
-     * @param string $columnsWithSort
-     *
-     * @return IndexException
-     *
-     * @throws \ReflectionException
-     */
-    final protected static function getAllRecordsDistinctForColumn(string $columnsWithSort)
-    {
-        try {
-            return self::commitGetAllRecordsDistinctForColumn($columnsWithSort);
+            return self::commitGetAllRecords($pagination, $filters);
         } catch (\Exception $exception) {
             return new IndexException(null, null, $exception->getMessage());
         }
