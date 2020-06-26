@@ -48,7 +48,7 @@ trait Repository
     final protected static function getAllRecords(?array $pagination = null, ?Filter $filters = null)
     {
         try {
-            if (isset($filters->filters()['columns_distinct'])) {
+            if (isset($filters) && isset($filters->filters()['columns_distinct'])) {
                 return self::commitGetAllRecordsDistinctForColumn($filters->filters()['columns_distinct']);
             }
 
