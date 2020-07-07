@@ -66,24 +66,28 @@ trait MakesResponses
     /**
      * Generate the response, but with fewer options
      *
-     * @param int           $status
-     * @param string|null   $message
-     * @param array|null    $data
+     * @param int                               $status
+     * @param string|null                       $message
+     * @param RepositoryException|array|null    $data
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function simplyRespond($status, ?string $message = null, ?array $data = null)
+    public function simplyRespond($status, ?string $message = null, $data = null)
     {
-        if (is_null($status)) {
-            $status = 200;
-        }
-
-        $this->status = $status;
-
-        if ($this->status < 400) {
-            $this->prepareSimpleSuccessResponse($message, $data);
+        if (!is_null($data) && $data instanceof RepositoryException) {
+            $this->prepareRepositoryExceptionResponse($data);
         } else {
-            $this->prepareSimpleErrorResponse($message);
+            if (is_null($status)) {
+                $status = 200;
+            }
+
+            $this->status = $status;
+
+            if ($this->status < 400) {
+                $this->prepareSimpleSuccessResponse($message, $data);
+            } else {
+                $this->prepareSimpleErrorResponse($message);
+            }
         }
 
         return $this->response->respond($this->status);
