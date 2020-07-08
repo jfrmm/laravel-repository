@@ -91,7 +91,10 @@ class Handler extends ExceptionHandler
         /**
          *  Handle HTTP response 401 Unauthorized
          */
-        if ($exception instanceof \Illuminate\Auth\AuthenticationException) {
+        if (
+            $exception instanceof \Illuminate\Auth\AuthenticationException ||
+            $exception instanceof \Flugg\Responder\Exceptions\Http\UnauthenticatedException
+        ) {
             return $this->handle401();
         }
 
