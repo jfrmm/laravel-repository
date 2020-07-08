@@ -49,7 +49,7 @@ class Handler extends ExceptionHandler
     }
 
     /**
-     * Report or log an exception.
+     * Report or log a throwable.
      *
      * @param  \Throwable  $throwable
      *
@@ -62,7 +62,7 @@ class Handler extends ExceptionHandler
         /**
          * Reports reserved for production
          */
-        if (!App::environment(['dev', 'preprod'])) {
+        if (!App::environment(['local', 'preprod'])) {
             /**
              * Report Repository exceptions
              */
@@ -77,7 +77,7 @@ class Handler extends ExceptionHandler
     }
 
     /**
-     * Render an exception into an HTTP response.
+     * Render a throwable into an HTTP response.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Throwable                $throwable
