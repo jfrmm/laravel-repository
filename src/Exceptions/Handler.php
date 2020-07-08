@@ -62,7 +62,7 @@ class Handler extends ExceptionHandler
         /**
          * Reports reserved for production
          */
-        if (!App::environment(['dev', 'preprod'])) {
+        if (!App::environment(['local', 'preprod'])) {
             /**
              * Report Repository exceptions
              */
