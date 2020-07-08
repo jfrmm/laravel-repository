@@ -51,13 +51,13 @@ class Handler extends ExceptionHandler
     /**
      * Report or log an exception.
      *
-     * @param  \Exception  $exception
+     * @param  \Throwable  $throwable
      *
      * @return void
      *
      * @throws \Exception
      */
-    public function report(Throwable $exception)
+    public function report(Throwable $throwable)
     {
         /**
          * Reports reserved for production
@@ -66,34 +66,34 @@ class Handler extends ExceptionHandler
             /**
              * Report Repository exceptions
              */
-            if ($exception instanceof RepositoryException) {
-                $this->responder->respond($exception);
+            if ($throwable instanceof RepositoryException) {
+                $this->responder->respond($throwable);
             }
 
             return;
         }
 
-        parent::report($exception);
+        parent::report($throwable);
     }
 
     /**
      * Render an exception into an HTTP response.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \Exception                $exception
+     * @param  \Throwable                $throwable
      *
      * @return \Symfony\Component\HttpFoundation\Response
      *
      * @throws \Throwable
      */
-    public function render($request, Throwable $exception)
+    public function render($request, Throwable $throwable)
     {
         /**
          *  Handle HTTP response 401 Unauthorized
          */
         if (
-            $exception instanceof \Illuminate\Auth\AuthenticationException ||
-            $exception instanceof \Flugg\Responder\Exceptions\Http\UnauthenticatedException
+            $throwable instanceof \Illuminate\Auth\AuthenticationException ||
+            $throwable instanceof \Flugg\Responder\Exceptions\Http\UnauthenticatedException
         ) {
             return $this->handle401();
         }
@@ -101,8 +101,8 @@ class Handler extends ExceptionHandler
         /**
          *  Handle other HTTP responses
          */
-        if ($exception instanceof \Symfony\Component\HttpKernel\Exception\HttpException) {
-            switch ($exception->getStatusCode()) {
+        if ($throwable instanceof \Symfony\Component\HttpKernel\Exception\HttpException) {
+            switch ($throwable->getStatusCode()) {
                 case 403:
                     return $this->handle403();
                 case 404:
@@ -115,14 +115,14 @@ class Handler extends ExceptionHandler
         /**
          * Handle Repository exceptions
          */
-        if ($exception instanceof RepositoryException) {
-            return $this->handleRepositoryException($exception);
+        if ($throwable instanceof RepositoryException) {
+            return $this->handleRepositoryException($throwable);
         }
 
         /**
          * Handle with default behaviour of the framework
          */
-        return parent::render($request, $exception);
+        return parent::render($request, $throwable);
     }
 
     /**
