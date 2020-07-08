@@ -164,6 +164,9 @@ trait MakesResponses
      */
     private function prepareRepositoryExceptionResponse(RepositoryException $exception)
     {
+        // report this exception in the logs
+        $exception->report();
+
         $reflect = new ReflectionClass($exception);
 
         switch ($reflect->getShortName()) {
