@@ -68,6 +68,26 @@ abstract class Filter
      */
     protected $joined = [];
 
+    /**
+     * Getter for the Request
+     *
+     * @return Request
+     */
+    public function getRequest()
+    {
+        return $this->request;
+    }
+
+    /**
+     * Getter for the Route
+     *
+     * @return Route
+     */
+    public function getRoute()
+    {
+        return $this->route;
+    }
+
     public function __construct(Request $request)
     {
         $this->request = $request;
