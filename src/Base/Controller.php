@@ -36,7 +36,7 @@ class Controller extends BaseController
             $this->request = $request;
             $this->createPagination($request);
             return $next($request);
-        })->only('index');
+        })->only(['index', 'indexChildren']);
 
         $this->httpResponses = new HTTPResponse();
     }
