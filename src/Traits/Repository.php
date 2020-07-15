@@ -7,6 +7,7 @@ use ASP\Repository\Exceptions\CreateException;
 use ASP\Repository\Exceptions\DeleteException;
 use ASP\Repository\Exceptions\IndexException;
 use ASP\Repository\Exceptions\ReadException;
+use ASP\Repository\Exceptions\RepositoryException;
 use ASP\Repository\Exceptions\UpdateException;
 use ASP\Repository\Exceptions\ValidationException;
 use Flugg\Responder\Exceptions\Http\HttpException;
@@ -44,7 +45,7 @@ trait Repository
      *
      * @return Collection|Model|LengthAwarePaginator
      *
-     * @throws HttpException|IndexException
+     * @throws HttpException|RepositoryException|IndexException
      */
     final protected static function getAllRecords(?array $pagination = null, ?Filter $filters = null)
     {
@@ -56,6 +57,8 @@ trait Repository
             return self::commitGetAllRecords($pagination, $filters);
         } catch (HttpException $exception) {
             throw $exception;
+        } catch (RepositoryException $exception) {
+            return $exception;
         } catch (\Exception $exception) {
             return new IndexException(null, null, $exception->getMessage());
         }
@@ -68,7 +71,7 @@ trait Repository
      *
      * @return Model|Collection|Builder
      *
-     * @throws HttpException|ReadException
+     * @throws HttpException|RepositoryException|ReadException
      */
     final protected static function getRecordById($id)
     {
@@ -76,6 +79,8 @@ trait Repository
             return self::commitGetRecordById($id);
         } catch (HttpException $exception) {
             throw $exception;
+        } catch (RepositoryException $exception) {
+            return $exception;
         } catch (\Exception $exception) {
             return new ReadException(null, null, $exception->getMessage());
         }
@@ -88,7 +93,7 @@ trait Repository
      *
      * @return Model|null
      *
-     * @throws HttpException|ValidationException|CreateException
+     * @throws HttpException|ValidationException|RepositoryException|CreateException
      */
     final protected static function createRecord(Request $request)
     {
@@ -102,6 +107,8 @@ trait Repository
             return self::commitCreateRecord($request);
         } catch (HttpException | ValidationException $exception) {
             throw $exception;
+        } catch (RepositoryException $exception) {
+            return $exception;
         } catch (\Exception $exception) {
             return new CreateException(null, null, $exception->getMessage());
         }
@@ -115,7 +122,7 @@ trait Repository
      *
      * @return Model|null
      *
-     * @throws HttpException|ValidationException|UpdateException
+     * @throws HttpException|ValidationException|RepositoryException|UpdateException
      */
     final protected static function updateRecordById($id, Request $request)
     {
@@ -129,6 +136,8 @@ trait Repository
             return self::commitUpdateRecordById($id, $request);
         } catch (HttpException | ValidationException $exception) {
             throw $exception;
+        } catch (RepositoryException $exception) {
+            return $exception;
         } catch (\Exception $exception) {
             return new UpdateException(null, null, $exception->getMessage());
         }
@@ -142,7 +151,7 @@ trait Repository
      *
      * @return bool|null
      *
-     * @throws HttpException|ValidationException|DeleteException
+     * @throws HttpException|ValidationException|RepositoryException|DeleteException
      */
     final protected static function deleteRecordById($id, Request $request)
     {
@@ -156,6 +165,8 @@ trait Repository
             return self::commitDeleteRecordById($id, $request);
         } catch (HttpException | ValidationException $exception) {
             throw $exception;
+        } catch (RepositoryException $exception) {
+            return $exception;
         } catch (\Exception $exception) {
             return new DeleteException(null, null, $exception->getMessage());
         }

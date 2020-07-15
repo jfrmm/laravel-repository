@@ -171,7 +171,7 @@ trait MakesResponses
 
         switch ($reflect->getShortName()) {
             case 'ValidationException':
-                $this->status = HTTPResponse::HTTP_UNPROCESSABLE_ENTITY;
+                $this->status = $exception->getStatus() ?: HTTPResponse::HTTP_UNPROCESSABLE_ENTITY;
                 $message = $exception->getMessage();
                 $errors = $exception->getExceptionData();
                 $data = [];
@@ -183,7 +183,7 @@ trait MakesResponses
                 break;
 
             case 'ReadException':
-                $this->status = HTTPResponse::HTTP_NOT_FOUND;
+                $this->status = $exception->getStatus() ?: HTTPResponse::HTTP_NOT_FOUND;
                 $message = $exception->getMessage();
                 $data = $exception->getExceptionData();
                 break;
@@ -192,13 +192,13 @@ trait MakesResponses
             case 'CreateException':
             case 'UpdateException':
             case 'DeleteException':
-                $this->status = HTTPResponse::HTTP_INTERNAL_SERVER_ERROR;
+                $this->status = $exception->getStatus() ?: HTTPResponse::HTTP_INTERNAL_SERVER_ERROR;
                 $message = $exception->getMessage();
                 $data = $exception->getExceptionData();
                 break;
 
             default:
-                $this->status = HTTPResponse::HTTP_INTERNAL_SERVER_ERROR;
+                $this->status = $exception->getStatus() ?: HTTPResponse::HTTP_INTERNAL_SERVER_ERROR;
                 $message = $exception->getMessage();
                 $data = null;
         }

@@ -92,26 +92,6 @@ class RepositoryException extends Exception
     }
 
     /**
-     * Set the exception data
-     *
-     * @return array
-     */
-    private function setExceptionData()
-    {
-        $data = [
-            'exception' => $this->classShortName,
-            'file' => $this->getFile(),
-            'line' => $this->getLine(),
-        ];
-
-        if (!App::environment('prod')) {
-            $data['trace'] = $this->getTraceAsString();
-        }
-
-        return $data;
-    }
-
-    /**
      * Get the exception data
      *
      * @return array
@@ -119,6 +99,16 @@ class RepositoryException extends Exception
     public function getExceptionData()
     {
         return $this->data;
+    }
+
+    /**
+     * Get the exception status
+     *
+     * @return mixed
+     */
+    public function getStatus()
+    {
+        return $this->status;
     }
 
     /**
@@ -150,5 +140,25 @@ class RepositoryException extends Exception
             default:
                 Log::error($this->message);
         }
+    }
+
+    /**
+     * Set the exception data
+     *
+     * @return array
+     */
+    private function setExceptionData()
+    {
+        $data = [
+            'exception' => $this->classShortName,
+            'file' => $this->getFile(),
+            'line' => $this->getLine(),
+        ];
+
+        if (!App::environment('prod')) {
+            $data['trace'] = $this->getTraceAsString();
+        }
+
+        return $data;
     }
 }
