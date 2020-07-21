@@ -215,6 +215,10 @@ abstract class Filter
     {
         $table = with($this->builder->getModel())->getTable();
 
+        if (env('DB_TABLE_PREFIX')) {
+            $table = env('DB_TABLE_PREFIX') . $table;
+        }
+
         if (in_array($column, $this->sortable)) {
             array_push($this->sorts, "{$table}.{$column} ASC");
         }
@@ -230,6 +234,10 @@ abstract class Filter
     private function updateSortDesc(string $column): void
     {
         $table = with($this->builder->getModel())->getTable();
+
+        if (env('DB_TABLE_PREFIX')) {
+            $table = env('DB_TABLE_PREFIX') . $table;
+        }
 
         if (in_array($column, $this->sortable)) {
             array_push($this->sorts, "{$table}.{$column} DESC");
