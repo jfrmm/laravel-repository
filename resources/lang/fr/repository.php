@@ -36,7 +36,7 @@ return [
 
         'sync' => 'Erreur synchronisation :Entity',
         'not_found' => ':Entity non trouvée',
-        'is_disabled' => 'Associé :Entity est désactivée.',
+        'is_disabled' => 'Associé :Entity est désactivée',
 
         'validation_failed' => 'Validation échouée',
     ],
