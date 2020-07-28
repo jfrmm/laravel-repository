@@ -113,7 +113,7 @@ abstract class Filter
                 }
 
                 if (is_null($value)) {
-                    continue;
+                    $value = '';
                 }
             } else {
                 if (count($value) === 0) {
